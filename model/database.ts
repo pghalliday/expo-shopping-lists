@@ -4,6 +4,10 @@ import schema from "./schema";
 import {Collection, Database} from "@nozbe/watermelondb";
 import List from "./List";
 import Item from "./Item";
+import Source from "~/model/Source";
+import CurrentItem from "~/model/CurrentItem";
+import PreviousItem from "~/model/PreviousItem";
+import ItemSource from "~/model/ItemSource";
 
 const adapter = new SQLiteAdapter({
     schema,
@@ -25,7 +29,11 @@ const database = new Database({
     adapter,
     modelClasses: [
         List,
+        Source,
         Item,
+        CurrentItem,
+        PreviousItem,
+        ItemSource,
     ],
 })
 

@@ -1,7 +1,8 @@
-import {Model, Relation} from "@nozbe/watermelondb";
-import {date, immutableRelation, readonly, text} from "@nozbe/watermelondb/decorators";
+import {Model, Q, Query, Relation} from "@nozbe/watermelondb";
+import {date, immutableRelation, lazy, readonly, text} from "@nozbe/watermelondb/decorators";
 import Item from "./Item";
 import List from "./List";
+import Source from "~/model/Source";
 
 export default class CurrentItem extends Model {
     static table = 'current_items'
@@ -18,4 +19,8 @@ export default class CurrentItem extends Model {
 
     @immutableRelation('lists', 'list_id') list!: Relation<List>
     @immutableRelation('items', 'item_id') item!: Relation<Item>
+
+    @lazy sources: Query<Source> = this.collections.get<Source>('sources').query(
+        Q.on('item_sources', 'item_id', this.itemId),
+    )
 }
