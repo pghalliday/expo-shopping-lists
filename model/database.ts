@@ -25,7 +25,7 @@ const adapter = new SQLiteAdapter({
 })
 
 // Then, make a Watermelon database from it!
-const database = new Database({
+export const database = new Database({
     adapter,
     modelClasses: [
         List,
@@ -37,4 +37,4 @@ const database = new Database({
     ],
 })
 
-export const lists: Collection<List> = database.get<List>('lists');
+export const lists = database.get<List>('lists').query();

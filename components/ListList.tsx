@@ -10,7 +10,7 @@ type ListListProps = {
 
 function ListList({lists}: ListListProps) {
     return (
-        <FlatList contentContainerClassName=''
+        <FlatList
                   data={lists}
                   renderItem={({item}) => <ListListItem list={item} />}
                   keyExtractor={list => list.id}

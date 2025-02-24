@@ -10,7 +10,7 @@ type ListListItemProps = {
 
 function ListListItem ({list}: ListListItemProps) {
     return (
-        <View className='p-3 mb-1 bg-white'>
+        <View className='p-3 mb-1 bg-secondary'>
             <Text className='text-base font-semibold'>{list.name}</Text>
         </View>
     );
