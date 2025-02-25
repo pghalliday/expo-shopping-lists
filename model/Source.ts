@@ -1,10 +1,11 @@
 import {Model, Q, Query, Relation} from "@nozbe/watermelondb";
-import {children, date, immutableRelation, lazy, readonly, text} from "@nozbe/watermelondb/decorators";
+import {children, date, immutableRelation, lazy, readonly, text, writer} from "@nozbe/watermelondb/decorators";
 import List from "./List";
 import PreviousItem from "./PreviousItem";
 import ItemSource from "./ItemSource";
 import CurrentItem from "./CurrentItem";
 import Item from "./Item";
+import assert from "assert";
 
 export default class Source extends Model {
     static table = 'sources'
@@ -31,4 +32,13 @@ export default class Source extends Model {
         Q.experimentalNestedJoin('items', 'item_sources'),
         Q.on('items', Q.on('item_sources', 'source_id', this.id)),
     )
+
+    @writer async addItem(item: Item) {
+        assert(item.listId === this.listId);
+        return this.collections.get<ItemSource>('item_sources').create((itemSource: ItemSource) => {
+            itemSource.itemId = item.id;
+            itemSource.listId = this.listId;
+            itemSource.sourceId = this.id;
+        });
+    }
 }

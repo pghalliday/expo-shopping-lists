@@ -1,6 +1,6 @@
 // model/List.js
-import {Model, Q, Query} from '@nozbe/watermelondb'
-import {children, date, lazy, readonly, text} from "@nozbe/watermelondb/decorators";
+import {Model, Query} from '@nozbe/watermelondb'
+import {children, date, readonly, text, writer} from "@nozbe/watermelondb/decorators";
 import Item from "./Item";
 import CurrentItem from "./CurrentItem";
 import PreviousItem from "./PreviousItem";
@@ -24,4 +24,19 @@ export default class List extends Model {
     @children('sources') sources!: Query<Source>
     @children('current_items') currentItems!: Query<CurrentItem>
     @children('previous_items') previousItems!: Query<PreviousItem>
+
+    @writer async addSource(name: string) {
+        return this.collections.get<Source>('sources').create((source: Source) => {
+            source.listId = this.id;
+            source.name = name;
+        });
+    }
+
+    @writer async addItem(name: string, units: string) {
+        return this.collections.get<Item>('items').create((item: Item) => {
+            item.listId = this.id;
+            item.name = name;
+            item.units = units;
+        });
+    }
 }

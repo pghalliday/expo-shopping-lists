@@ -1,7 +1,7 @@
 // First, create the adapter to the underlying database:
 import SQLiteAdapter from "@nozbe/watermelondb/adapters/sqlite";
 import schema from "./schema";
-import {Collection, Database} from "@nozbe/watermelondb";
+import {Database} from "@nozbe/watermelondb";
 import List from "./List";
 import Item from "./Item";
 import Source from "~/model/Source";

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { View } from 'react-native';
-import ListList from "~/components/ListList";
+import ListList from "~/components/lists/ListList";
 import {database, lists} from "~/model/database";
 import {PlusButton} from "~/components/PlusButton";
 import List from "~/model/List";
@@ -16,7 +16,7 @@ export default function Screen() {
   }
 
   return (
-    <View className='flex-1 bg-background'>
+    <View className='flex-1 bg-secondary'>
       <ListList lists={lists} />
       <PlusButton onPress={addList}></PlusButton>
     </View>

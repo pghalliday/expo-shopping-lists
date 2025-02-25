@@ -1,7 +1,7 @@
 import List from "~/model/List";
 import {FlatList} from "~/components/FlatList";
 import * as React from "react";
-import ListListItem from "~/components/ListListItem";
+import ListListItem from "~/components/lists/ListListItem";
 import {withObservables} from "@nozbe/watermelondb/react";
 
 type ListListProps = {
