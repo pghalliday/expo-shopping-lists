@@ -3,6 +3,7 @@ import {FlatList} from "~/components/FlatList";
 import * as React from "react";
 import ListListItem from "~/components/lists/ListListItem";
 import {withObservables} from "@nozbe/watermelondb/react";
+import {GestureHandlerRootView} from "react-native-gesture-handler";
 
 type ListListProps = {
     lists: List[],
@@ -10,11 +11,13 @@ type ListListProps = {
 
 function ListList({lists}: ListListProps) {
     return (
-        <FlatList
-                  data={lists}
-                  renderItem={({item}) => <ListListItem list={item} />}
-                  keyExtractor={list => list.id}
-        />
+        <GestureHandlerRootView>
+            <FlatList
+                data={lists}
+                renderItem={({item}) => <ListListItem list={item} />}
+                keyExtractor={list => list.id}
+            />
+        </GestureHandlerRootView>
     );
 }
 

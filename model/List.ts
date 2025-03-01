@@ -5,6 +5,7 @@ import Item from "./Item";
 import CurrentItem from "./CurrentItem";
 import PreviousItem from "./PreviousItem";
 import Source from "./Source";
+import ItemSource from "~/model/ItemSource";
 
 export default class List extends Model {
     static table = 'lists'
@@ -24,6 +25,7 @@ export default class List extends Model {
     @children('sources') sources!: Query<Source>
     @children('current_items') currentItems!: Query<CurrentItem>
     @children('previous_items') previousItems!: Query<PreviousItem>
+    @children('item_sources') itemSources!: Query<ItemSource>
 
     @writer async addSource(name: string) {
         return this.collections.get<Source>('sources').create((source: Source) => {
@@ -38,5 +40,14 @@ export default class List extends Model {
             item.name = name;
             item.units = units;
         });
+    }
+
+    async markAsDeleted() {
+        await this.items.destroyAllPermanently();
+        await this.sources.destroyAllPermanently();
+        await this.currentItems.destroyAllPermanently();
+        await this.previousItems.destroyAllPermanently();
+        await this.itemSources.destroyAllPermanently();
+        await super.markAsDeleted();
     }
 }

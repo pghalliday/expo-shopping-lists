@@ -41,4 +41,10 @@ export default class Source extends Model {
             itemSource.sourceId = this.id;
         });
     }
+
+    async markAsDeleted() {
+        await this.previousItems.destroyAllPermanently();
+        await this.itemSources.destroyAllPermanently();
+        await super.markAsDeleted();
+    }
 }

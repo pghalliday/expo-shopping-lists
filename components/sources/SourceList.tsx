@@ -3,6 +3,7 @@ import * as React from "react";
 import {withObservables} from "@nozbe/watermelondb/react";
 import SourceListItem from "~/components/sources/SourceListItem";
 import Source from "~/model/Source";
+import {GestureHandlerRootView} from "react-native-gesture-handler";
 
 type SourceListProps = {
     sources: Source[],
@@ -10,11 +11,13 @@ type SourceListProps = {
 
 function SourceList({sources}: SourceListProps) {
     return (
-        <FlatList
-                  data={sources}
-                  renderItem={({item}) => <SourceListItem source={item} />}
-                  keyExtractor={source => source.id}
-        />
+        <GestureHandlerRootView>
+            <FlatList
+                data={sources}
+                renderItem={({item}) => <SourceListItem source={item} />}
+                keyExtractor={source => source.id}
+            />
+        </GestureHandlerRootView>
     );
 }
 

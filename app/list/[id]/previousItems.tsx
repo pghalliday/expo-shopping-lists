@@ -18,7 +18,6 @@ export default function Screen() {
         const findList = async () => {
             const list = await database.get<List>('lists').find(id)
             setList(list);
-            console.log(list.name)
         }
         findList().catch(console.error)
     })

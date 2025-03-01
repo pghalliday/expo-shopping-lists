@@ -1,12 +1,12 @@
 import {GestureResponderEvent, Pressable, View} from 'react-native';
 import { cn } from '~/lib/utils';
-import {Plus} from "~/lib/icons/Plus";
+import {Trash2} from "~/lib/icons/Trash2";
 
-type PlusButtonProps = {
+type DeleteButtonProps = {
   onPress: (event: GestureResponderEvent) => void,
 };
 
-export function PlusButton({onPress}: PlusButtonProps) {
+export function DeleteButton({onPress}: DeleteButtonProps) {
   return (
     <Pressable
       onPress={onPress}
@@ -15,11 +15,11 @@ export function PlusButton({onPress}: PlusButtonProps) {
       {({ pressed }) => (
         <View
           className={cn(
-            'flex-1 aspect-square absolute bottom-5 right-5',
+            'flex-1 aspect-square',
             pressed && 'opacity-70'
           )}
         >
-          <Plus className='text-foreground' size={48} strokeWidth={2.5} />
+          <Trash2 className='bg-red-600 text-white' />
         </View>
       )}
     </Pressable>
