@@ -11,6 +11,7 @@ import { PortalHost } from '@rn-primitives/portal';
 import { setAndroidNavigationBar } from '~/lib/android-navigation-bar';
 import {SettingsButton} from "~/components/SettingsButton";
 import {useThemeSetting} from "~/lib/useThemeSetting";
+import {useEffect} from "react";
 
 const LIGHT_THEME: Theme = {
   ...DefaultTheme,
@@ -31,6 +32,14 @@ export default function RootLayout() {
   const { themeSetting } = useThemeSetting();
   const { colorScheme, isDarkColorScheme, setColorScheme } = useColorScheme();
   const [isColorSchemeLoaded, setIsColorSchemeLoaded] = React.useState(false);
+
+  useEffect(() => {
+    setColorScheme(themeSetting)
+  }, [themeSetting]);
+
+  useEffect(() => {
+    setAndroidNavigationBar(colorScheme)
+  }, [colorScheme]);
 
   useIsomorphicLayoutEffect(() => {
     if (hasMounted.current) {

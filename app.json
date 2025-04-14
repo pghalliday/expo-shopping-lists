@@ -5,7 +5,7 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
+    "scheme": "com.anonymous.expo-shopping-lists",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "splash": {

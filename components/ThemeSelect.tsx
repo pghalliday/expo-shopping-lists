@@ -6,6 +6,7 @@ import {useSafeAreaInsets} from "react-native-safe-area-context";
 import {useEffect} from "react";
 import {useColorScheme} from "~/lib/useColorScheme";
 import {setAndroidNavigationBar} from "~/lib/android-navigation-bar";
+import {View} from "react-native";
 
 const LABELS: Record<ThemeSetting, string> = {
     system: 'System',
@@ -49,21 +50,25 @@ export function ThemeSelect() {
     };
 
     return (
-        <>
-            <Label nativeID='theme'>Theme</Label>
-            <Select value={{value: themeSetting, label: LABELS[themeSetting]}} onValueChange={onValueChange}>
-                <SelectTrigger className='w-[250px]'>
-                    <SelectValue
-                        className='text-foreground text-sm native:text-lg'
-                        placeholder='Select a theme'
-                    />
-                </SelectTrigger>
-                <SelectContent insets={contentInsets} className='w-[250px]'>
-                    <ThemeItem themeSetting='system' />
-                    <ThemeItem themeSetting='light' />
-                    <ThemeItem themeSetting='dark' />
-                </SelectContent>
-            </Select>
-        </>
+        <View className='flex-row items-center gap-2'>
+            <View className='grow-0'>
+                <Label nativeID='theme'>Theme</Label>
+            </View>
+            <View className='grow'>
+                <Select value={{value: themeSetting, label: LABELS[themeSetting]}} onValueChange={onValueChange}>
+                    <SelectTrigger>
+                        <SelectValue
+                            className='text-foreground text-sm native:text-lg'
+                            placeholder='Select a theme'
+                        />
+                    </SelectTrigger>
+                    <SelectContent insets={contentInsets}>
+                        <ThemeItem themeSetting='system' />
+                        <ThemeItem themeSetting='light' />
+                        <ThemeItem themeSetting='dark' />
+                    </SelectContent>
+                </Select>
+            </View>
+        </View>
     );
 }
