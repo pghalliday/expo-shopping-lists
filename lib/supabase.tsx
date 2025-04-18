@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import {createClient} from '@supabase/supabase-js'
 import {SyncDatabaseChangeSet, synchronize} from "@nozbe/watermelondb/sync";
 import {database} from "~/model/database";
-import {createContext, useEffect, useState} from "react";
+import {createContext, PropsWithChildren, useContext, useEffect, useState} from "react";
 import {Session} from "@supabase/auth-js";
 
 const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL!
@@ -37,9 +37,9 @@ export async function sync() {
     })
 }
 
-export const SupabaseSessionContext = createContext<Session | null>(null);
+const SupabaseSessionContext = createContext<Session | null>(null);
 
-export function useSupabaseSession() {
+export function SupabaseSessionProvider({children}: PropsWithChildren<{}>) {
     const [session, setSession] = useState<Session | null>(null);
 
     useEffect(() => {
@@ -51,5 +51,13 @@ export function useSupabaseSession() {
         });
     }, []);
 
-    return session;
+    return (
+        <SupabaseSessionContext.Provider value={session}>
+            {children}
+        </SupabaseSessionContext.Provider>
+    );
+}
+
+export function useSupabaseSession() {
+    return useContext(SupabaseSessionContext);
 }

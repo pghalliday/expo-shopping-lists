@@ -1,16 +1,32 @@
 import {Link} from "expo-router";
 import * as React from "react";
-import {useContext, useEffect, useState} from "react";
 import {Button} from "~/components/ui/button";
 import {Text} from "~/components/ui/text";
-import {supabase, SupabaseSessionContext} from "~/lib/supabase";
-import {Session} from "@supabase/auth-js";
+import {supabase, useSupabaseSession} from "~/lib/supabase";
 import {View} from "react-native";
 
 export function Auth() {
-    const session = useContext(SupabaseSessionContext);
+    const session = useSupabaseSession();
 
-    const logOut = () => supabase.auth.signOut();
+    const logOut = () => {
+        console.log('logOut');
+        supabase.auth.signOut({scope: 'local'}).then(({error}) => {
+            console.log(error);
+            // TODO: sometimes we get an AuthSessionMissingError even though there seems
+            // TODO: to be a session. This may be related to a refresh of the app and the
+            // TODO: following code works around the problem by setting the session again
+            // TODO: before trying to signOut
+            // supabase.auth.getSession().then(({data: {session}, error}) => {
+            //     console.log(error);
+            //     console.log(session);
+            //     supabase.auth.setSession(session!).then(() => {
+            //         supabase.auth.signOut({scope: 'local'}).then(({error}) => {
+            //             console.log(error);
+            //         });
+            //     });
+            // });
+        });
+    }
 
     if (!session) return (
         <Link
