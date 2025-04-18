@@ -12,6 +12,7 @@ import { setAndroidNavigationBar } from '~/lib/android-navigation-bar';
 import {SettingsButton} from "~/components/SettingsButton";
 import {useThemeSetting} from "~/lib/useThemeSetting";
 import {useEffect} from "react";
+import {SupabaseSessionContext, useSupabaseSession} from "~/lib/supabase";
 
 const LIGHT_THEME: Theme = {
   ...DefaultTheme,
@@ -32,6 +33,7 @@ export default function RootLayout() {
   const { themeSetting } = useThemeSetting();
   const { colorScheme, isDarkColorScheme, setColorScheme } = useColorScheme();
   const [isColorSchemeLoaded, setIsColorSchemeLoaded] = React.useState(false);
+  const session = useSupabaseSession();
 
   useEffect(() => {
     setColorScheme(themeSetting)
@@ -61,25 +63,27 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
-      <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} />
-      <Stack
-        screenOptions={{
-          headerRight: () => <SettingsButton/>
-        }}
-      >
-        <Stack.Screen
-          name='index'
-          options={{
-            title: 'Shopping Lists',
-          }}
-        />
-        <Stack.Screen
-          name='list/[id]'
-          options={{
-          }}
-        />
-      </Stack>
-      <PortalHost />
+      <SupabaseSessionContext.Provider value={session}>
+        <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} />
+        <Stack
+            screenOptions={{
+              headerRight: () => <SettingsButton/>
+            }}
+        >
+          <Stack.Screen
+              name='index'
+              options={{
+                title: 'Shopping Lists',
+              }}
+          />
+          <Stack.Screen
+              name='list/[id]'
+              options={{
+              }}
+          />
+        </Stack>
+        <PortalHost />
+      </SupabaseSessionContext.Provider>
     </ThemeProvider>
   );
 }

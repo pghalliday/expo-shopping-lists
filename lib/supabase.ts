@@ -2,6 +2,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import {createClient} from '@supabase/supabase-js'
 import {SyncDatabaseChangeSet, synchronize} from "@nozbe/watermelondb/sync";
 import {database} from "~/model/database";
+import {createContext, useEffect, useState} from "react";
+import {Session} from "@supabase/auth-js";
 
 const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL!
 const supabaseAnonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY!
@@ -33,4 +35,21 @@ export async function sync() {
         },
         sendCreatedAsUpdated: true,
     })
+}
+
+export const SupabaseSessionContext = createContext<Session | null>(null);
+
+export function useSupabaseSession() {
+    const [session, setSession] = useState<Session | null>(null);
+
+    useEffect(() => {
+        supabase.auth.getSession().then(({data: {session}}) => {
+            setSession(session);
+        });
+        supabase.auth.onAuthStateChange((_event, session) => {
+            setSession(session);
+        });
+    }, []);
+
+    return session;
 }
