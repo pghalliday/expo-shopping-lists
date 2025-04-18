@@ -1,91 +1,87 @@
 import '~/global.css';
 
-import { DarkTheme, DefaultTheme, Theme, ThemeProvider } from '@react-navigation/native';
+import {DarkTheme, DefaultTheme, Theme, ThemeProvider} from '@react-navigation/native';
 import {Stack} from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
+import {StatusBar} from 'expo-status-bar';
 import * as React from 'react';
-import { Platform } from 'react-native';
-import { NAV_THEME } from '~/lib/constants';
-import { useColorScheme } from '~/lib/useColorScheme';
-import { PortalHost } from '@rn-primitives/portal';
-import { setAndroidNavigationBar } from '~/lib/android-navigation-bar';
+import {useEffect} from 'react';
+import {Platform} from 'react-native';
+import {NAV_THEME} from '~/lib/constants';
+import {useColorScheme} from '~/lib/useColorScheme';
+import {PortalHost} from '@rn-primitives/portal';
+import {setAndroidNavigationBar} from '~/lib/android-navigation-bar';
 import {SettingsButton} from "~/components/SettingsButton";
-import {useThemeSetting} from "~/lib/useThemeSetting";
-import {useEffect} from "react";
-import {SupabaseSessionProvider} from "~/lib/supabase";
+import {useThemeSetting} from "~/lib/AppProviders/ThemeSettingProvider";
 
 const LIGHT_THEME: Theme = {
-  ...DefaultTheme,
-  colors: NAV_THEME.light,
+    ...DefaultTheme,
+    colors: NAV_THEME.light,
 };
 const DARK_THEME: Theme = {
-  ...DarkTheme,
-  colors: NAV_THEME.dark,
+    ...DarkTheme,
+    colors: NAV_THEME.dark,
 };
 
 export {
-  // Catch any errors thrown by the Layout component.
-  ErrorBoundary,
+    // Catch any errors thrown by the Layout component.
+    ErrorBoundary,
 } from 'expo-router';
 
 export default function RootLayout() {
-  const hasMounted = React.useRef(false);
-  const { themeSetting } = useThemeSetting();
-  const { colorScheme, isDarkColorScheme, setColorScheme } = useColorScheme();
-  const [isColorSchemeLoaded, setIsColorSchemeLoaded] = React.useState(false);
+    const hasMounted = React.useRef(false);
+    const {themeSetting} = useThemeSetting();
+    const {colorScheme, isDarkColorScheme, setColorScheme} = useColorScheme();
+    const [isColorSchemeLoaded, setIsColorSchemeLoaded] = React.useState(false);
 
-  useEffect(() => {
-    setColorScheme(themeSetting)
-  }, [themeSetting]);
+    useEffect(() => {
+        setColorScheme(themeSetting)
+    }, [themeSetting]);
 
-  useEffect(() => {
-    setAndroidNavigationBar(colorScheme)
-  }, [colorScheme]);
+    useEffect(() => {
+        setAndroidNavigationBar(colorScheme)
+    }, [colorScheme]);
 
-  useIsomorphicLayoutEffect(() => {
-    if (hasMounted.current) {
-      return;
+    useIsomorphicLayoutEffect(() => {
+        if (hasMounted.current) {
+            return;
+        }
+
+        if (Platform.OS === 'web') {
+            // Adds the background color to the html element to prevent white background on overscroll.
+            document.documentElement.classList.add('bg-background');
+        }
+        setAndroidNavigationBar(colorScheme);
+        setIsColorSchemeLoaded(true);
+        hasMounted.current = true;
+    }, []);
+
+    if (!isColorSchemeLoaded) {
+        return null;
     }
 
-    if (Platform.OS === 'web') {
-      // Adds the background color to the html element to prevent white background on overscroll.
-      document.documentElement.classList.add('bg-background');
-    }
-    setAndroidNavigationBar(colorScheme);
-    setIsColorSchemeLoaded(true);
-    hasMounted.current = true;
-  }, []);
-
-  if (!isColorSchemeLoaded) {
-    return null;
-  }
-
-  return (
-    <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
-      <SupabaseSessionProvider>
-        <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} />
-        <Stack
-            screenOptions={{
-              headerRight: () => <SettingsButton/>
-            }}
-        >
-          <Stack.Screen
-              name='index'
-              options={{
-                title: 'Shopping Lists',
-              }}
-          />
-          <Stack.Screen
-              name='list/[id]'
-              options={{
-              }}
-          />
-        </Stack>
-        <PortalHost />
-      </SupabaseSessionProvider>
-    </ThemeProvider>
-  );
+    return (
+        <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
+            <StatusBar style={isDarkColorScheme ? 'light' : 'dark'}/>
+            <Stack
+                screenOptions={{
+                    headerRight: () => <SettingsButton/>
+                }}
+            >
+                <Stack.Screen
+                    name='index'
+                    options={{
+                        title: 'Shopping Lists',
+                    }}
+                />
+                <Stack.Screen
+                    name='list/[id]'
+                    options={{}}
+                />
+            </Stack>
+            <PortalHost/>
+        </ThemeProvider>
+    );
 }
 
 const useIsomorphicLayoutEffect =
-  Platform.OS === 'web' && typeof window === 'undefined' ? React.useEffect : React.useLayoutEffect;
+    Platform.OS === 'web' && typeof window === 'undefined' ? React.useEffect : React.useLayoutEffect;

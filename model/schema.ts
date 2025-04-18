@@ -2,7 +2,7 @@
 import { appSchema, tableSchema } from '@nozbe/watermelondb'
 
 export default appSchema({
-    version: 2,
+    version: 5,
     tables: [
         tableSchema({
             name: 'lists',

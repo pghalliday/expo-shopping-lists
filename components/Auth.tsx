@@ -2,8 +2,9 @@ import {Link} from "expo-router";
 import * as React from "react";
 import {Button} from "~/components/ui/button";
 import {Text} from "~/components/ui/text";
-import {supabase, useSupabaseSession} from "~/lib/supabase";
+import {supabase} from "~/lib/supabase";
 import {View} from "react-native";
+import {useSupabaseSession} from "~/lib/AppProviders/SupabaseSessionProvider";
 
 export function Auth() {
     const session = useSupabaseSession();
