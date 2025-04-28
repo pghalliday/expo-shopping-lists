@@ -3,9 +3,6 @@ import * as React from "react";
 import {ThemeSetting, useThemeSetting} from "~/lib/AppProviders/ThemeSettingProvider";
 import {Option, Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "~/components/ui/select";
 import {useSafeAreaInsets} from "react-native-safe-area-context";
-import {useEffect} from "react";
-import {useColorScheme} from "~/lib/useColorScheme";
-import {setAndroidNavigationBar} from "~/lib/android-navigation-bar";
 import {View} from "react-native";
 
 const LABELS: Record<ThemeSetting, string> = {
@@ -35,15 +32,6 @@ export function ThemeSelect() {
         right: 12,
     };
     const {themeSetting, setThemeSetting} = useThemeSetting();
-    const {colorScheme, setColorScheme} = useColorScheme();
-
-    useEffect(() => {
-        setColorScheme(themeSetting);
-    }, [themeSetting]);
-
-    useEffect(() => {
-        setAndroidNavigationBar(colorScheme);
-    }, [colorScheme]);
 
     const onValueChange = (option: Option) => {
         setThemeSetting(option!.value as ThemeSetting);
