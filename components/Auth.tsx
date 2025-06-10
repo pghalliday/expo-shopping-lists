@@ -31,7 +31,7 @@ export function Auth() {
 
     if (!session) return (
         <Link
-            href="/email"
+            href="/login"
             asChild
         >
             <Button>

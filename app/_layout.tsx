@@ -12,6 +12,7 @@ import {PortalHost} from '@rn-primitives/portal';
 import {setAndroidNavigationBar} from '~/lib/android-navigation-bar';
 import {SettingsButton} from "~/components/SettingsButton";
 import {useThemeSetting} from "~/lib/AppProviders/ThemeSettingProvider";
+import {useFirstRun} from "~/lib/AppProviders/FirstRunProvider";
 
 const LIGHT_THEME: Theme = {
     ...DefaultTheme,
@@ -32,6 +33,11 @@ export default function RootLayout() {
     const {themeSetting} = useThemeSetting();
     const {colorScheme, isDarkColorScheme, setColorScheme} = useColorScheme();
     const [isColorSchemeLoaded, setIsColorSchemeLoaded] = React.useState(false);
+    const {firstRun, setFirstRun} = useFirstRun();
+
+    useEffect(() => {
+        console.log(firstRun)
+    }, [firstRun]);
 
     useEffect(() => {
         setColorScheme(themeSetting)
