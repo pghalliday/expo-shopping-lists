@@ -15,6 +15,21 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
     },
 })
 
+export async function signOutSupabase() {
+    const {error} = await supabase.auth.signOut({scope: 'local'});
+    console.log(`signOut error: ${error}`);
+    // TODO: sometimes we get an AuthSessionMissingError even though there seems
+    // TODO: to be a session. This may be related to a refresh of the app and the
+    // TODO: following code works around the problem by setting the session again
+    // TODO: before trying to signOut
+    // const {data: {session}, error} = await supabase.auth.getSession();
+    // console.log(`getSession error: ${error}`);
+    // console.log(`getSession session: ${session}`);
+    // await supabase.auth.setSession(session!);
+    // const {error} = await supabase.auth.signOut({scope: 'local'});
+    // console.log(`signOut error: ${error}`);
+}
+
 export async function sync() {
     await synchronize({
         database,

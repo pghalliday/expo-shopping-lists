@@ -79,33 +79,35 @@ export default function Screen() {
         return null;
     };
 
-    return (
-        <>
-            <Stack.Screen options={{title: "Log In"}}/>
-            <View className='flex-1 bg-background p-6 gap-12'>
-                <Text>{currentInstructions}</Text>
-                <View className='gap-y-4'>
-                    <ErrorText/>
-                    <Input
-                        ref={input}
-                        autoFocus
-                        placeholder={currentPlaceholder}
-                        autoComplete={currentAutoComplete}
-                        autoCapitalize='none'
-                        autoCorrect={false}
-                        keyboardType={currentKeyboardType}
-                        onChangeText={onChangeText}
-                        submitBehavior='submit'
-                        onSubmitEditing={submit}
-                        value={inputText}
-                        editable={!working}
-                    />
-                    <Button onPress={submit} disabled={working || inputText === ''}>
-                        <Text>{currentButtonText}</Text>
-                    </Button>
-                </View>
-                <ActivityIndicator animating={working}/>
+    return <>
+        <Stack.Screen
+            options={{
+                title: 'Log In',
+            }}
+        />
+        <View className='flex-1 bg-background p-6 gap-12'>
+            <Text>{currentInstructions}</Text>
+            <View className='gap-y-4'>
+                <ErrorText/>
+                <Input
+                    ref={input}
+                    autoFocus
+                    placeholder={currentPlaceholder}
+                    autoComplete={currentAutoComplete}
+                    autoCapitalize='none'
+                    autoCorrect={false}
+                    keyboardType={currentKeyboardType}
+                    onChangeText={onChangeText}
+                    submitBehavior='submit'
+                    onSubmitEditing={submit}
+                    value={inputText}
+                    editable={!working}
+                />
+                <Button onPress={submit} disabled={working || inputText === ''}>
+                    <Text>{currentButtonText}</Text>
+                </Button>
             </View>
-        </>
-    );
+            <ActivityIndicator animating={working}/>
+        </View>
+    </>
 }

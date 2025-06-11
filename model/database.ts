@@ -37,4 +37,10 @@ export const database = new Database({
     ],
 })
 
+export async function resetDatabase() {
+    await database.write(async () => {
+        await database.unsafeResetDatabase();
+    });
+}
+
 export const lists = database.get<List>('lists').query();
