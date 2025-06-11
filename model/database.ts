@@ -38,8 +38,16 @@ export const database = new Database({
 })
 
 export async function resetDatabase() {
-    await database.write(async () => {
-        await database.unsafeResetDatabase();
+    return  database.write(async () => {
+        return  database.unsafeResetDatabase();
+    });
+}
+
+export async function addList(name: string): Promise<List> {
+    return  database.write(async () => {
+        return  database.get<List>('lists').create(list => {
+            list.name = name;
+        });
     });
 }
 

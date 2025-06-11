@@ -6,13 +6,14 @@ import {Button} from "~/components/ui/button";
 import {useFirstRun} from "~/lib/Root/FirstRunProvider";
 import {useSupabaseSession} from "~/lib/Root/SupabaseSessionProvider";
 import {useEffect} from "react";
+import {addList} from "~/model/database";
 
 export function FirstRun() {
     const {setFirstRun} = useFirstRun();
     const session = useSupabaseSession();
 
     const createLocal = async () => {
-        // TODO: create initial list
+        await addList('My first list');
         await setFirstRun(false);
     }
 

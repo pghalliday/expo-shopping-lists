@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {View} from 'react-native';
-import {database, lists} from "~/model/database";
+import {addList, database, lists} from "~/model/database";
 import {PlusButton} from "~/components/PlusButton";
 import List from "~/model/List";
 import {router, Stack} from "expo-router";
@@ -31,15 +31,6 @@ const ListList = createModelList({
 })
 
 export function ShoppingLists() {
-
-    async function addList() {
-        return database.write(async () => {
-            return database.get<List>('lists').create(list => {
-                list.name = 'this is another test';
-            });
-        });
-    }
-
     return <>
         <Stack.Screen
             options={{
@@ -49,7 +40,7 @@ export function ShoppingLists() {
         />
         <View className='flex-1 bg-secondary'>
             <ListList models={lists}/>
-            <PlusButton onPress={addList}></PlusButton>
+            <PlusButton onPress={() => addList('New list')}></PlusButton>
         </View>
     </>
 }
