@@ -1,6 +1,6 @@
 import {Label} from "~/components/ui/label";
 import * as React from "react";
-import {ThemeSetting, useThemeSetting} from "~/lib/AppProviders/ThemeSettingProvider";
+import {ThemeSetting, useThemeSetting} from "~/lib/Root/ThemeSettingProvider";
 import {Option, Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "~/components/ui/select";
 import {useSafeAreaInsets} from "react-native-safe-area-context";
 import {View} from "react-native";

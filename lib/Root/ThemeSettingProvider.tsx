@@ -1,5 +1,5 @@
 import {createContext, PropsWithChildren, useContext, useEffect, useState} from "react";
-import {LocalStorageService} from "~/lib/AppProviders/LocalStorageService";
+import {LocalStorageService} from "~/lib/Root/LocalStorageService";
 
 export type ThemeSetting = 'light' | 'dark' | 'system';
 export const DEFAULT_THEME_SETTING: ThemeSetting = 'system';

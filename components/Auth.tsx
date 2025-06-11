@@ -4,7 +4,7 @@ import {Button} from "~/components/ui/button";
 import {Text} from "~/components/ui/text";
 import {supabase} from "~/lib/supabase";
 import {View} from "react-native";
-import {useSupabaseSession} from "~/lib/AppProviders/SupabaseSessionProvider";
+import {useSupabaseSession} from "~/lib/Root/SupabaseSessionProvider";
 
 export function Auth() {
     const session = useSupabaseSession();
@@ -12,7 +12,7 @@ export function Auth() {
     const logOut = () => {
         console.log('logOut');
         supabase.auth.signOut({scope: 'local'}).then(({error}) => {
-            console.log(error);
+            console.log(`logOut error: ${error}`);
             // TODO: sometimes we get an AuthSessionMissingError even though there seems
             // TODO: to be a session. This may be related to a refresh of the app and the
             // TODO: following code works around the problem by setting the session again
