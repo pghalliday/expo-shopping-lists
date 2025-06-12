@@ -7,13 +7,16 @@ import {useFirstRun} from "~/lib/Root/FirstRunProvider";
 import {useSupabaseSession} from "~/lib/Root/SupabaseSessionProvider";
 import {useEffect} from "react";
 import {addList} from "~/model/database";
+import {useCurrentList} from "~/lib/Root/CurrentListProvider";
 
 export function FirstRun() {
     const {setFirstRun} = useFirstRun();
+    const {setCurrentList} = useCurrentList();
     const session = useSupabaseSession();
 
     const createLocal = async () => {
-        await addList('My first list');
+        const list = await addList('My first list');
+        await setCurrentList(list.id);
         await setFirstRun(false);
     }
 
