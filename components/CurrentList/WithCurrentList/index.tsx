@@ -7,6 +7,7 @@ import List from "~/model/List";
 import {database} from "~/model/database";
 import {WhileAddingItem} from "~/components/CurrentList/WithCurrentList/WhileAddingItem";
 import {WhileViewingList} from "~/components/CurrentList/WithCurrentList/WhileViewingList";
+import CurrentItem from "~/model/CurrentItem";
 
 type WithCurrentListProps = {
     currentList: string,
@@ -28,7 +29,8 @@ export function WithCurrentList({currentList}: WithCurrentListProps) {
         setAddingItem(true);
     }
 
-    const onCompleteAdd = () => {
+    const onCompleteAdd = (currentItem: CurrentItem) => {
+        console.log(`Added item with id: ${currentItem.id}`);
         setAddingItem(false);
     }
 

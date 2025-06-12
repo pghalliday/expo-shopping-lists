@@ -15,6 +15,7 @@ export function FirstRun() {
     const session = useSupabaseSession();
 
     const createLocal = async () => {
+        // TODO: error handling
         const list = await addList('My first list');
         await setCurrentList(list.id);
         await setFirstRun(false);

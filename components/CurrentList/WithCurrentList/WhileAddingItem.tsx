@@ -5,10 +5,12 @@ import List from "~/model/List";
 import {Input} from "~/components/ui/input";
 import {Button} from "~/components/ui/button";
 import {Text} from "~/components/ui/text";
+import {addCurrentItem} from "~/model/database";
+import CurrentItem from "~/model/CurrentItem";
 
 type WhileAddingItemProps = {
     list: List,
-    onCompleteAdd: () => void,
+    onCompleteAdd: (currentItem: CurrentItem) => void,
 };
 
 export function WhileAddingItem({list, onCompleteAdd}: WhileAddingItemProps) {
@@ -30,8 +32,15 @@ export function WhileAddingItem({list, onCompleteAdd}: WhileAddingItemProps) {
 
     async function addItem() {
         if (inputText !== '') {
-            // TODO: add the current item
-            onCompleteAdd();
+            setWorking(true);
+            try {
+                const currentItem = await addCurrentItem(list.id, inputText);
+                onCompleteAdd(currentItem);
+            } catch (error: any) {
+                setErrorMessage(error);
+            } finally {
+                setWorking(false);
+            }
         }
     }
 

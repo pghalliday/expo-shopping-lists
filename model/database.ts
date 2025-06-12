@@ -51,4 +51,17 @@ export async function addList(name: string): Promise<List> {
     });
 }
 
+export async function addCurrentItem(listId: string, name: string): Promise<CurrentItem> {
+    return  database.write(async () => {
+        const item = await database.get<Item>('items').create(item => {
+            item.listId = listId;
+            item.name = name;
+        });
+        return database.get<CurrentItem>('current_items').create(currentItem => {
+            currentItem.itemId = item.id;
+            currentItem.listId = listId;
+        });
+    });
+}
+
 export const lists = database.get<List>('lists').query();
