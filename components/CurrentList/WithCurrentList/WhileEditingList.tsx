@@ -5,17 +5,16 @@ import List from "~/model/List";
 import {Input} from "~/components/ui/input";
 import {Button} from "~/components/ui/button";
 import {Text} from "~/components/ui/text";
-import {addCurrentItem} from "~/model/database";
-import CurrentItem from "~/model/CurrentItem";
+import {updateList} from "~/model/database";
 
-type WhileAddingItemProps = {
+type WhileEditingListProps = {
     list: List,
-    onCompleteAdd: (currentItem: CurrentItem) => void,
+    onCompleteEdit: () => void,
 };
 
-export function WhileAddingItem({list, onCompleteAdd}: WhileAddingItemProps) {
+export function WhileEditingList({list, onCompleteEdit}: WhileEditingListProps) {
     const input = useRef<TextInput>(null);
-    const [inputText, setInputText] = useState('');
+    const [inputText, setInputText] = useState(list.name);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [working, setWorking] = useState(false);
 
@@ -34,8 +33,8 @@ export function WhileAddingItem({list, onCompleteAdd}: WhileAddingItemProps) {
         if (inputText !== '') {
             setWorking(true);
             try {
-                const currentItem = await addCurrentItem(list.id, inputText);
-                onCompleteAdd(currentItem);
+                await updateList(list, inputText);
+                onCompleteEdit();
             } catch (error: any) {
                 setErrorMessage(error);
                 input.current!.focus();
@@ -51,7 +50,7 @@ export function WhileAddingItem({list, onCompleteAdd}: WhileAddingItemProps) {
             <Input
                 ref={input}
                 autoFocus
-                placeholder='New item'
+                placeholder='List name'
                 onChangeText={onChangeText}
                 submitBehavior='submit'
                 onSubmitEditing={addItem}
@@ -59,7 +58,7 @@ export function WhileAddingItem({list, onCompleteAdd}: WhileAddingItemProps) {
                 value={inputText}
             />
             <Button onPress={addItem} disabled={working || inputText === ''}>
-                <Text>Add</Text>
+                <Text>Save</Text>
             </Button>
         </View>
         <ActivityIndicator animating={working}/>

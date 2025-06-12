@@ -64,4 +64,12 @@ export async function addCurrentItem(listId: string, name: string): Promise<Curr
     });
 }
 
+export async function updateList(list: List, name: string) {
+    return database.write(async () => {
+        return list.update(list => {
+            list.name = name;
+        });
+    });
+}
+
 export const lists = database.get<List>('lists').query();

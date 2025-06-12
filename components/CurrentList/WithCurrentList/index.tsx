@@ -1,13 +1,15 @@
 import * as React from "react";
 import {ActivityIndicator, View} from "react-native";
 import {Stack} from "expo-router";
-import {SettingsButton} from "~/components/SettingsButton";
 import {useEffect, useState} from "react";
 import List from "~/model/List";
 import {database} from "~/model/database";
 import {WhileAddingItem} from "~/components/CurrentList/WithCurrentList/WhileAddingItem";
 import {WhileViewingList} from "~/components/CurrentList/WithCurrentList/WhileViewingList";
 import CurrentItem from "~/model/CurrentItem";
+import {WhileEditingList} from "~/components/CurrentList/WithCurrentList/WhileEditingList";
+import {EditButton} from "~/components/EditButton";
+import {CancelButton} from "~/components/CancelButton";
 
 type WithCurrentListProps = {
     currentList: string,
@@ -16,6 +18,7 @@ type WithCurrentListProps = {
 export function WithCurrentList({currentList}: WithCurrentListProps) {
     const [list, setList] = useState<List>();
     const [addingItem, setAddingItem] = useState(false);
+    const [editingList, setEditingList] = useState(false);
 
     useEffect(() => {
         const findList = async () => {
@@ -24,6 +27,18 @@ export function WithCurrentList({currentList}: WithCurrentListProps) {
         }
         findList().catch(console.error)
     })
+
+    const onStartEdit = () => {
+        setEditingList(true);
+    }
+
+    const onCompleteEdit = () => {
+        setEditingList(false);
+    }
+
+    const onCancelEdit = () => {
+        setEditingList(false);
+    }
 
     const onStartAdd = () => {
         setAddingItem(true);
@@ -34,21 +49,39 @@ export function WithCurrentList({currentList}: WithCurrentListProps) {
         setAddingItem(false);
     }
 
+    const onCancelAdd = () => {
+        setAddingItem(false);
+    }
+
     if (list !== undefined) {
-        const StackScreen = () => <Stack.Screen
-            options={{
-                title: list.name,
-                headerRight: () => <SettingsButton/>,
-            }}
-        />
         if (addingItem) {
             return <>
-                <StackScreen/>
+                <Stack.Screen
+                    options={{
+                        title: 'Add item',
+                        headerRight: () => <CancelButton onPress={onCancelAdd}/>,
+                    }}
+                />
                 <WhileAddingItem list={list} onCompleteAdd={onCompleteAdd}/>
+            </>
+        } else if (editingList) {
+            return <>
+                <Stack.Screen
+                    options={{
+                        title: 'Edit list',
+                        headerRight: () => <CancelButton onPress={onCancelEdit}/>,
+                    }}
+                />
+                <WhileEditingList list={list} onCompleteEdit={onCompleteEdit}/>
             </>
         } else {
             return <>
-                <StackScreen/>
+                <Stack.Screen
+                    options={{
+                        title: list.name,
+                        headerRight: () => <EditButton onPress={onStartEdit}/>,
+                    }}
+                />
                 <WhileViewingList list={list} onStartAdd={onStartAdd}/>
             </>
         }
@@ -58,7 +91,7 @@ export function WithCurrentList({currentList}: WithCurrentListProps) {
         <Stack.Screen
             options={{
                 title: 'Loading...',
-                headerRight: () => <SettingsButton/>,
+                headerRight: () => null,
             }}
         />
         <View className='flex-1 bg-secondary'>
