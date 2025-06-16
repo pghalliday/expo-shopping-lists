@@ -7,30 +7,30 @@ const firstRunContext = createContext<boolean>(INITIAL_FIRST_RUN);
 const firstRunStorage = new LocalStorageService<boolean>('firstRun', INITIAL_FIRST_RUN);
 
 export function FirstRunProvider({children}: PropsWithChildren<{}>) {
-  const [ firstRun, setFirstRun ] = useState<boolean>(INITIAL_FIRST_RUN);
-  const [isFirstRunLoaded, setIsFirstRunLoaded] = useState(false);
+    const [firstRun, setFirstRun] = useState<boolean>(INITIAL_FIRST_RUN);
+    const [isFirstRunLoaded, setIsFirstRunLoaded] = useState(false);
 
-  useEffect(() => {
-    firstRunStorage.onValue(value => {
-      setFirstRun(value);
-      setIsFirstRunLoaded(true);
-    });
-  }, []);
+    useEffect(() => {
+        firstRunStorage.onValue(value => {
+            setFirstRun(value);
+            setIsFirstRunLoaded(true);
+        });
+    }, []);
 
-  if (!isFirstRunLoaded) {
-    return null;
-  }
+    if (!isFirstRunLoaded) {
+        return null;
+    }
 
-  return (
-      <firstRunContext.Provider value={firstRun}>
-        {children}
-      </firstRunContext.Provider>
-  );
+    return (
+        <firstRunContext.Provider value={firstRun}>
+            {children}
+        </firstRunContext.Provider>
+    );
 }
 
 export function useFirstRun() {
-  return {
-    firstRun: useContext(firstRunContext),
-    setFirstRun: (value: boolean) => firstRunStorage.set(value),
-  };
+    return {
+        firstRun: useContext(firstRunContext),
+        setFirstRun: (value: boolean) => firstRunStorage.set(value),
+    };
 }

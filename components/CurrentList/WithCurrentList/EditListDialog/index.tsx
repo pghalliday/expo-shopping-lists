@@ -1,20 +1,22 @@
 import * as React from "react";
-import {ActivityIndicator, TextInput, View} from "react-native";
 import {useRef, useState} from "react";
-import List from "~/model/List";
-import {Input} from "~/components/ui/input";
+import {Dialog, DialogContent, DialogTitle} from "~/components/ui/dialog";
 import {Button} from "~/components/ui/button";
 import {Text} from "~/components/ui/text";
+import {Input} from "~/components/ui/input";
+import {ActivityIndicator, TextInput} from "react-native";
 import {updateList} from "~/model/database";
+import List from "~/model/List";
 
-type WhileEditingListProps = {
+type EditListDialogProps = {
+    open: boolean,
     list: List,
     onCompleteEdit: () => void,
 };
 
-export function WhileEditingList({list, onCompleteEdit}: WhileEditingListProps) {
+export function EditListDialog({open, list, onCompleteEdit}: EditListDialogProps) {
     const input = useRef<TextInput>(null);
-    const [inputText, setInputText] = useState(list.name);
+    const [inputText, setInputText] = useState('');
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [working, setWorking] = useState(false);
 
@@ -29,7 +31,7 @@ export function WhileEditingList({list, onCompleteEdit}: WhileEditingListProps) 
         setInputText(inputText);
     };
 
-    async function addItem() {
+    async function editList() {
         if (inputText !== '') {
             setWorking(true);
             try {
@@ -44,8 +46,11 @@ export function WhileEditingList({list, onCompleteEdit}: WhileEditingListProps) 
         }
     }
 
-    return <View className='flex-1 bg-secondary'>
-        <View className='gap-y-4'>
+    return <Dialog open={open} onOpenChange={() => onCompleteEdit()}>
+        <DialogContent>
+            <DialogTitle>
+                Edit List
+            </DialogTitle>
             <ErrorText/>
             <Input
                 ref={input}
@@ -53,14 +58,14 @@ export function WhileEditingList({list, onCompleteEdit}: WhileEditingListProps) 
                 placeholder='List name'
                 onChangeText={onChangeText}
                 submitBehavior='submit'
-                onSubmitEditing={addItem}
+                onSubmitEditing={editList}
                 editable={!working}
                 value={inputText}
             />
-            <Button onPress={addItem} disabled={working || inputText === ''}>
+            <Button onPress={editList} disabled={working || inputText === ''}>
                 <Text>Save</Text>
             </Button>
-        </View>
-        <ActivityIndicator animating={working}/>
-    </View>
+            <ActivityIndicator animating={working}/>
+        </DialogContent>
+    </Dialog>
 }

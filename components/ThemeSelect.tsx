@@ -16,11 +16,11 @@ type ThemeItemProps = {
 };
 
 function ThemeItem({themeSetting}: ThemeItemProps) {
-   return (
-       <SelectItem label={LABELS[themeSetting]} value={themeSetting}>
-           {LABELS[themeSetting]}
-       </SelectItem>
-   );
+    return (
+        <SelectItem label={LABELS[themeSetting]} value={themeSetting}>
+            {LABELS[themeSetting]}
+        </SelectItem>
+    );
 }
 
 export function ThemeSelect() {
@@ -51,9 +51,9 @@ export function ThemeSelect() {
                         />
                     </SelectTrigger>
                     <SelectContent insets={contentInsets}>
-                        <ThemeItem themeSetting='system' />
-                        <ThemeItem themeSetting='light' />
-                        <ThemeItem themeSetting='dark' />
+                        <ThemeItem themeSetting='system'/>
+                        <ThemeItem themeSetting='light'/>
+                        <ThemeItem themeSetting='dark'/>
                     </SelectContent>
                 </Select>
             </View>

@@ -1,15 +1,40 @@
 import * as React from "react";
-import {ActivityIndicator, View} from "react-native";
-import {Stack} from "expo-router";
 import {useEffect, useState} from "react";
+import {ActivityIndicator, View} from "react-native";
 import List from "~/model/List";
 import {database} from "~/model/database";
-import {WhileAddingItem} from "~/components/CurrentList/WithCurrentList/WhileAddingItem";
-import {WhileViewingList} from "~/components/CurrentList/WithCurrentList/WhileViewingList";
 import CurrentItem from "~/model/CurrentItem";
-import {WhileEditingList} from "~/components/CurrentList/WithCurrentList/WhileEditingList";
 import {EditButton} from "~/components/EditButton";
-import {CancelButton} from "~/components/CancelButton";
+import {Drawer} from "expo-router/drawer";
+import {PlusButton} from "~/components/PlusButton";
+import Item from "~/model/Item";
+import {createModelList} from "~/components/ModelList";
+import {AddItemDialog} from "~/components/CurrentList/WithCurrentList/AddItemDialog";
+import {EditListDialog} from "~/components/CurrentList/WithCurrentList/EditListDialog";
+
+type CurrentItemListItemProps = {
+    currentItem: CurrentItem,
+    item: Item,
+};
+
+const CurrentItemList = createModelList({
+    async delete(props: CurrentItemListItemProps): Promise<void> {
+        await database.write(async () => {
+            await props.currentItem.markAsDeleted();
+        });
+    },
+    getListText(props: CurrentItemListItemProps): string {
+        return props.item.name;
+    },
+    onPress(_props: CurrentItemListItemProps): void {
+    },
+    getObservables({model}: { model: CurrentItem }): any {
+        return {
+            currentItem: model,
+            item: model.item,
+        }
+    }
+})
 
 type WithCurrentListProps = {
     currentList: string,
@@ -36,60 +61,40 @@ export function WithCurrentList({currentList}: WithCurrentListProps) {
         setEditingList(false);
     }
 
-    const onCancelEdit = () => {
-        setEditingList(false);
-    }
-
     const onStartAdd = () => {
         setAddingItem(true);
     }
 
-    const onCompleteAdd = (currentItem: CurrentItem) => {
-        console.log(`Added item with id: ${currentItem.id}`);
-        setAddingItem(false);
-    }
-
-    const onCancelAdd = () => {
+    const onCompleteAdd = (currentItem?: CurrentItem) => {
+        if (currentItem !== undefined) {
+            console.log(`Added item with id: ${currentItem.id}`);
+        } else {
+            console.log('Cancelled add item');
+        }
         setAddingItem(false);
     }
 
     if (list !== undefined) {
-        if (addingItem) {
             return <>
-                <Stack.Screen
-                    options={{
-                        title: 'Add item',
-                        headerRight: () => <CancelButton onPress={onCancelAdd}/>,
-                    }}
-                />
-                <WhileAddingItem list={list} onCompleteAdd={onCompleteAdd}/>
-            </>
-        } else if (editingList) {
-            return <>
-                <Stack.Screen
-                    options={{
-                        title: 'Edit list',
-                        headerRight: () => <CancelButton onPress={onCancelEdit}/>,
-                    }}
-                />
-                <WhileEditingList list={list} onCompleteEdit={onCompleteEdit}/>
-            </>
-        } else {
-            return <>
-                <Stack.Screen
+                <Drawer.Screen
                     options={{
                         title: list.name,
                         headerRight: () => <EditButton onPress={onStartEdit}/>,
                     }}
                 />
-                <WhileViewingList list={list} onStartAdd={onStartAdd}/>
+                <View className='flex-1 bg-secondary py-1'>
+                    <CurrentItemList models={list!.currentItems}/>
+                    <AddItemDialog open={addingItem} list={list} onCompleteAdd={onCompleteAdd}/>
+                    <EditListDialog open={editingList} list={list} onCompleteEdit={onCompleteEdit}/>
+                    <PlusButton onPress={onStartAdd}/>
+                </View>
             </>
-        }
     }
 
     return <>
-        <Stack.Screen
+        <Drawer.Screen
             options={{
+                drawerLabel: 'Home',
                 title: 'Loading...',
                 headerRight: () => null,
             }}

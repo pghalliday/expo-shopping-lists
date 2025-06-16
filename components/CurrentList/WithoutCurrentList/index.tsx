@@ -1,13 +1,12 @@
 import * as React from "react";
-import {Stack} from "expo-router";
-import {SettingsButton} from "~/components/SettingsButton";
+import {Drawer} from "expo-router/drawer";
 
 export function WithoutCurrentList() {
     return <>
-        <Stack.Screen
+        <Drawer.Screen
             options={{
                 title: 'No List',
-                headerRight: () => <SettingsButton/>,
+                headerRight: () => null,
             }}
         />
     </>

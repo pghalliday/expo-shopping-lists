@@ -1,18 +1,21 @@
 import * as React from 'react';
-import {View} from 'react-native';
-import {Text} from "~/components/ui/text";
-import {Link, Stack} from "expo-router";
-import {Button} from "~/components/ui/button";
 import {useFirstRun} from "~/lib/Root/FirstRunProvider";
-import {useSupabaseSession} from "~/lib/Root/SupabaseSessionProvider";
-import {useEffect} from "react";
-import {addList} from "~/model/database";
+import {Redirect, Stack} from "expo-router";
 import {useCurrentList} from "~/lib/Root/CurrentListProvider";
+import {addList} from "~/model/database";
+import {View} from "react-native";
+import {Text} from "~/components/ui/text";
+import {LoginDialog} from "~/components/LoginDialog";
+import {Button} from "~/components/ui/button";
+import {PortalHost} from "@rn-primitives/portal";
+import {useState} from "react";
 
-export function FirstRun() {
-    const {setFirstRun} = useFirstRun();
+export default function Screen() {
+    const {firstRun, setFirstRun} = useFirstRun();
+    if (!firstRun) return <Redirect href='/'/>
+
     const {setCurrentList} = useCurrentList();
-    const session = useSupabaseSession();
+    const [loginVisible, setLoginVisible] = useState(false);
 
     const createLocal = async () => {
         // TODO: error handling
@@ -21,9 +24,10 @@ export function FirstRun() {
         await setFirstRun(false);
     }
 
-    useEffect(() => {
-        if (session !== null) setFirstRun(false);
-    }, [session]);
+    const onLinkComplete = async () => {
+        await setCurrentList(null);
+        await setFirstRun(false);
+    }
 
     return <>
         <Stack.Screen
@@ -37,14 +41,7 @@ export function FirstRun() {
         <View className='flex-1 bg-background p-6 gap-12'>
             <Text>Do you wish to link to an online account or start with a local database?</Text>
             <View className='gap-y-4'>
-                <Link
-                    href='/login'
-                    asChild
-                >
-                    <Button>
-                        <Text>Link</Text>
-                    </Button>
-                </Link>
+                <LoginDialog buttonText='Link' onComplete={onLinkComplete}/>
                 <Button onPress={createLocal}>
                     <Text>Local</Text>
                 </Button>

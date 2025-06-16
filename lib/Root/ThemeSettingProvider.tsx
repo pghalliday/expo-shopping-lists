@@ -8,22 +8,22 @@ const themeSettingContext = createContext<ThemeSetting>(DEFAULT_THEME_SETTING);
 const themeSettingStorage = new LocalStorageService<ThemeSetting>('theme', DEFAULT_THEME_SETTING);
 
 export function ThemeSettingProvider({children}: PropsWithChildren<{}>) {
-  const [ themeSetting, setThemeSetting ] = useState<ThemeSetting>(DEFAULT_THEME_SETTING);
+    const [themeSetting, setThemeSetting] = useState<ThemeSetting>(DEFAULT_THEME_SETTING);
 
-  useEffect(() => {
-    themeSettingStorage.onValue(value => setThemeSetting(value));
-  }, []);
+    useEffect(() => {
+        themeSettingStorage.onValue(value => setThemeSetting(value));
+    }, []);
 
-  return (
-      <themeSettingContext.Provider value={themeSetting}>
-        {children}
-      </themeSettingContext.Provider>
-  );
+    return (
+        <themeSettingContext.Provider value={themeSetting}>
+            {children}
+        </themeSettingContext.Provider>
+    );
 }
 
 export function useThemeSetting() {
-  return {
-    themeSetting: useContext(themeSettingContext),
-    setThemeSetting: (value: ThemeSetting) => themeSettingStorage.set(value),
-  };
+    return {
+        themeSetting: useContext(themeSettingContext),
+        setThemeSetting: (value: ThemeSetting) => themeSettingStorage.set(value),
+    };
 }

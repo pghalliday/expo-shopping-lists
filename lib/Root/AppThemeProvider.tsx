@@ -1,6 +1,6 @@
+import * as React from "react";
 import {PropsWithChildren, useEffect, useLayoutEffect, useRef, useState} from "react";
 import {DarkTheme, DefaultTheme, Theme, ThemeProvider} from "@react-navigation/native";
-import * as React from "react";
 import {useColorScheme} from "~/lib/useColorScheme";
 import {NAV_THEME} from "~/lib/constants";
 import {useThemeSetting} from "~/lib/Root/ThemeSettingProvider";

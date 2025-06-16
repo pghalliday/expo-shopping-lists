@@ -10,16 +10,19 @@ import {withObservables} from "@nozbe/watermelondb/react";
 
 interface ModelListController<T extends Model, P> {
     getListText(props: P): string;
+
     delete(props: P): Promise<void>;
+
     onPress(props: P): void;
+
     // TODO: This `any` satisfies the type checking but ideally this should be better
     // TODO: defined in terms of `P` and in compliance with watermelondb types used
     // TODO: in `withObservables`
-    getObservables(props: {model: T}): any;
+    getObservables(props: { model: T }): any;
 }
 
-function createModelListItem<T extends  Model, P>(controller: ModelListController<T, P>) {
-    return function ModelListItem (props: P) {
+function createModelListItem<T extends Model, P>(controller: ModelListController<T, P>) {
+    return function ModelListItem(props: P) {
         async function deleteModel() {
             await controller.delete(props);
         }
@@ -30,7 +33,7 @@ function createModelListItem<T extends  Model, P>(controller: ModelListControlle
 
         const renderActions = () => (
             <View className='p-3 mb-1 bg-red-600'>
-                <DeleteButton onPress={deleteModel} />
+                <DeleteButton onPress={deleteModel}/>
             </View>
         );
 
@@ -63,7 +66,7 @@ export function createModelList<T extends Model, P>(controller: ModelListControl
             <GestureHandlerRootView>
                 <FlatList
                     data={models}
-                    renderItem={({item}) => <ModelListItem model={item} />}
+                    renderItem={({item}) => <ModelListItem model={item}/>}
                     keyExtractor={model => model.id}
                 />
             </GestureHandlerRootView>
@@ -72,7 +75,7 @@ export function createModelList<T extends Model, P>(controller: ModelListControl
 
     const enhanceListElement = withObservables(
         ['models'],
-        ({ models }: {models: T[]}) => ({
+        ({models}: { models: T[] }) => ({
             models: models,
         })
     );

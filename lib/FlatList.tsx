@@ -9,4 +9,4 @@ remapProps(FlatList, {
     contentContainerClassName: "contentContainerStyle",
 });
 
-export { FlatList };
+export {FlatList};

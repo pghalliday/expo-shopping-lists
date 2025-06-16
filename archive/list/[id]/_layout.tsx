@@ -3,7 +3,6 @@ import {Tabs, useLocalSearchParams, useNavigation} from "expo-router";
 import {useEffect} from "react";
 import {database} from "~/model/database";
 import List from "~/model/List";
-import {SettingsButton} from "~/components/SettingsButton";
 
 export default function TabLayout() {
   const navigation = useNavigation();
