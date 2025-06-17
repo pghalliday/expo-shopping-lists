@@ -1,10 +1,10 @@
 import * as React from "react";
 import {useEffect, useRef, useState} from "react";
-import {Dialog, DialogContent, DialogHeader, DialogTitle} from "~/components/ui/dialog";
+import {Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle} from "~/components/ui/dialog";
 import {Button} from "~/components/ui/button";
 import {Text} from "~/components/ui/text";
 import {Input} from "~/components/ui/input";
-import {ActivityIndicator, TextInput} from "react-native";
+import {ActivityIndicator, ScrollView, TextInput} from "react-native";
 import {updateList} from "~/model/database";
 import List from "~/model/List";
 
@@ -53,25 +53,29 @@ export function EditListDialog({open, list, onCompleteEdit}: EditListDialogProps
     }
 
     return <Dialog open={open} onOpenChange={() => onCompleteEdit()}>
-        <DialogContent className='min-w-full'>
+        <DialogContent className='min-w-full mt-10'>
             <DialogHeader>
                 <DialogTitle>Edit List</DialogTitle>
             </DialogHeader>
-            <ErrorText/>
-            <Input
-                ref={input}
-                autoFocus
-                placeholder='List name'
-                onChangeText={onChangeText}
-                submitBehavior='submit'
-                onSubmitEditing={editList}
-                editable={!working}
-                value={inputText}
-            />
-            <Button onPress={editList} disabled={working || inputText === ''}>
-                <Text>Save</Text>
-            </Button>
-            <ActivityIndicator animating={working}/>
+            <ScrollView>
+                <ErrorText/>
+                <Input
+                    ref={input}
+                    autoFocus
+                    placeholder='List name'
+                    onChangeText={onChangeText}
+                    submitBehavior='submit'
+                    onSubmitEditing={editList}
+                    editable={!working}
+                    value={inputText}
+                />
+            </ScrollView>
+            <DialogFooter>
+                <Button onPress={editList} disabled={working || inputText === ''}>
+                    <Text>Save</Text>
+                </Button>
+                <ActivityIndicator animating={working}/>
+            </DialogFooter>
         </DialogContent>
     </Dialog>
 }
