@@ -15,7 +15,7 @@ export function EditButton({onPress}: EditButtonProps) {
         {({pressed}) => (
             <View
                 className={cn(
-                    'flex-1 aspect-square pt-0.5 justify-center items-start web:px-5',
+                    'flex-1 aspect-square pt-0.5 pl-2 justify-center items-start web:px-5',
                     pressed && 'opacity-70'
                 )}
             >
