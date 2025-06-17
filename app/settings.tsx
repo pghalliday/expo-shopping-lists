@@ -6,10 +6,9 @@ import {LinkedAccount} from "~/components/LinkedAccount";
 import {Button} from "~/components/ui/button";
 import {Text} from "~/components/ui/text";
 import {useFirstRun} from "~/lib/Root/FirstRunProvider";
-import {Redirect, useRouter} from "expo-router";
+import {Redirect} from "expo-router";
 import {signOutSupabase} from "~/lib/supabase";
 import {resetDatabase} from "~/model/database";
-import {PortalHost} from "@rn-primitives/portal";
 import {Drawer} from "expo-router/drawer";
 
 export default function Screen() {

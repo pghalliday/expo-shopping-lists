@@ -5,17 +5,14 @@ import {useCurrentList} from "~/lib/Root/CurrentListProvider";
 import {addList} from "~/model/database";
 import {View} from "react-native";
 import {Text} from "~/components/ui/text";
-import {LoginDialog} from "~/components/LoginDialog";
 import {Button} from "~/components/ui/button";
-import {PortalHost} from "@rn-primitives/portal";
-import {useState} from "react";
+import {LoginButton} from "~/components/LoginButton";
 
 export default function Screen() {
     const {firstRun, setFirstRun} = useFirstRun();
     if (!firstRun) return <Redirect href='/'/>
 
     const {setCurrentList} = useCurrentList();
-    const [loginVisible, setLoginVisible] = useState(false);
 
     const createLocal = async () => {
         // TODO: error handling
@@ -41,7 +38,7 @@ export default function Screen() {
         <View className='flex-1 bg-background p-6 gap-12'>
             <Text>Do you wish to link to an online account or start with a local database?</Text>
             <View className='gap-y-4'>
-                <LoginDialog buttonText='Link' onComplete={onLinkComplete}/>
+                <LoginButton label='Link' onComplete={onLinkComplete}/>
                 <Button onPress={createLocal}>
                     <Text>Local</Text>
                 </Button>

@@ -75,20 +75,20 @@ export function WithCurrentList({currentList}: WithCurrentListProps) {
     }
 
     if (list !== undefined) {
-            return <>
-                <Drawer.Screen
-                    options={{
-                        title: list.name,
-                        headerRight: () => <EditButton onPress={onStartEdit}/>,
-                    }}
-                />
-                <View className='flex-1 bg-secondary py-1'>
-                    <CurrentItemList models={list!.currentItems}/>
-                    <AddItemDialog open={addingItem} list={list} onCompleteAdd={onCompleteAdd}/>
-                    <EditListDialog open={editingList} list={list} onCompleteEdit={onCompleteEdit}/>
-                    <PlusButton onPress={onStartAdd}/>
-                </View>
-            </>
+        return <>
+            <Drawer.Screen
+                options={{
+                    title: list.name,
+                    headerRight: () => <EditButton onPress={onStartEdit}/>,
+                }}
+            />
+            <View className='flex-1 bg-secondary py-1'>
+                <CurrentItemList models={list!.currentItems}/>
+                <AddItemDialog open={addingItem} list={list} onCompleteAdd={onCompleteAdd}/>
+                <EditListDialog open={editingList} list={list} onCompleteEdit={onCompleteEdit}/>
+                <PlusButton onPress={onStartAdd}/>
+            </View>
+        </>
     }
 
     return <>

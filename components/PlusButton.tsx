@@ -15,7 +15,7 @@ export function PlusButton({onPress}: PlusButtonProps) {
             {({pressed}) => (
                 <View
                     className={cn(
-                        'flex-1 aspect-square absolute bottom-5 right-5',
+                        'flex-1 aspect-square absolute bottom-20 right-10',
                         pressed && 'opacity-70'
                     )}
                 >
