@@ -1,10 +1,10 @@
 import * as React from "react";
 import {useEffect, useRef, useState} from "react";
-import {Dialog, DialogContent, DialogTitle} from "~/components/ui/dialog";
+import {Dialog, DialogContent, DialogHeader, DialogTitle} from "~/components/ui/dialog";
 import {Button} from "~/components/ui/button";
 import {Text} from "~/components/ui/text";
 import {Input} from "~/components/ui/input";
-import {ActivityIndicator, TextInput, View} from "react-native";
+import {ActivityIndicator, TextInput} from "react-native";
 import {addCurrentItem} from "~/model/database";
 import List from "~/model/List";
 import CurrentItem from "~/model/CurrentItem";
@@ -54,27 +54,25 @@ export function AddItemDialog({open, list, onCompleteAdd}: AddItemDialogProps) {
     }
 
     return <Dialog open={open} onOpenChange={() => onCompleteAdd()}>
-        <DialogContent>
-            <View>
-                <DialogTitle>
-                    Add Item
-                </DialogTitle>
-                <ErrorText/>
-                <Input
-                    ref={input}
-                    autoFocus
-                    placeholder='New item'
-                    onChangeText={onChangeText}
-                    submitBehavior='submit'
-                    onSubmitEditing={addItem}
-                    editable={!working}
-                    value={inputText}
-                />
-                <Button onPress={addItem} disabled={working || inputText === ''}>
-                    <Text>Add</Text>
-                </Button>
-                <ActivityIndicator animating={working}/>
-            </View>
+        <DialogContent className='min-w-full'>
+            <DialogHeader>
+                <DialogTitle>Add Item</DialogTitle>
+            </DialogHeader>
+            <ErrorText/>
+            <Input
+                ref={input}
+                autoFocus
+                placeholder='New item'
+                onChangeText={onChangeText}
+                submitBehavior='submit'
+                onSubmitEditing={addItem}
+                editable={!working}
+                value={inputText}
+            />
+            <Button onPress={addItem} disabled={working || inputText === ''}>
+                <Text>Add</Text>
+            </Button>
+            <ActivityIndicator animating={working}/>
         </DialogContent>
     </Dialog>
 }

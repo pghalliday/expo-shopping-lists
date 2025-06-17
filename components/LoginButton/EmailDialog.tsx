@@ -1,6 +1,6 @@
 import * as React from "react";
 import {useEffect, useRef, useState} from "react";
-import {Dialog, DialogContent, DialogDescription} from "~/components/ui/dialog";
+import {Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle} from "~/components/ui/dialog";
 import {Button} from "~/components/ui/button";
 import {Text} from "~/components/ui/text";
 import {Input} from "~/components/ui/input";
@@ -55,11 +55,14 @@ export function EmailDialog({open, onComplete, onCancel}: EmailDialogProps) {
     }
 
     return <Dialog open={open} onOpenChange={() => onCancel()}>
-        <DialogContent>
-            <DialogDescription>
-                Enter your email address to log in or create an account.
-                You will then receive an email containing a one time log in code.
-            </DialogDescription>
+        <DialogContent className='min-w-full'>
+            <DialogHeader>
+                <DialogTitle>Log in</DialogTitle>
+                <DialogDescription>
+                    Enter your email address to log in or create an account.
+                    You will then receive an email containing a one time log in code.
+                </DialogDescription>
+            </DialogHeader>
             <ErrorText/>
             <Input
                 ref={input}

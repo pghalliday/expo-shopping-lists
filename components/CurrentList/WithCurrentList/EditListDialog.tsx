@@ -1,6 +1,6 @@
 import * as React from "react";
 import {useEffect, useRef, useState} from "react";
-import {Dialog, DialogContent, DialogTitle} from "~/components/ui/dialog";
+import {Dialog, DialogContent, DialogHeader, DialogTitle} from "~/components/ui/dialog";
 import {Button} from "~/components/ui/button";
 import {Text} from "~/components/ui/text";
 import {Input} from "~/components/ui/input";
@@ -53,10 +53,10 @@ export function EditListDialog({open, list, onCompleteEdit}: EditListDialogProps
     }
 
     return <Dialog open={open} onOpenChange={() => onCompleteEdit()}>
-        <DialogContent>
-            <DialogTitle>
-                Edit List
-            </DialogTitle>
+        <DialogContent className='min-w-full'>
+            <DialogHeader>
+                <DialogTitle>Edit List</DialogTitle>
+            </DialogHeader>
             <ErrorText/>
             <Input
                 ref={input}

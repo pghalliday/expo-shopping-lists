@@ -1,6 +1,6 @@
 import * as React from "react";
 import {useEffect, useRef, useState} from "react";
-import {Dialog, DialogContent, DialogDescription} from "~/components/ui/dialog";
+import {Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle} from "~/components/ui/dialog";
 import {Button} from "~/components/ui/button";
 import {Text} from "~/components/ui/text";
 import {Input} from "~/components/ui/input";
@@ -58,10 +58,13 @@ export function CodeDialog({open, email, onComplete, onCancel}: CodeDialogProps)
     }
 
     return <Dialog open={open} onOpenChange={() => onCancel()}>
-        <DialogContent>
-            <DialogDescription>
-                Enter the log in code sent to email address: {email}
-            </DialogDescription>
+        <DialogContent className='min-w-full'>
+            <DialogHeader>
+                <DialogTitle>Log in</DialogTitle>
+                <DialogDescription>
+                    Enter the log in code sent to email address: {email}
+                </DialogDescription>
+            </DialogHeader>
             <ErrorText/>
             <Input
                 ref={input}
