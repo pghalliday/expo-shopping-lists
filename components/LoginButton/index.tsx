@@ -28,7 +28,8 @@ export function LoginButton({label, onComplete, onCancel}: LoginButtonProps) {
     function onEmailComplete(email: string) {
         setEmail(email);
         setEmailOpen(false);
-        setCodeOpen(true);
+        // This timeout ensures that the autofocus for the code dialog works
+        setTimeout(() => setCodeOpen(true), 0);
     }
 
     function onCodeCancel() {
