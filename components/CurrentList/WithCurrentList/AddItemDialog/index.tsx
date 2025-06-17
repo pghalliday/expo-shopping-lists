@@ -1,5 +1,5 @@
 import * as React from "react";
-import {useRef, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {Dialog, DialogContent, DialogTitle} from "~/components/ui/dialog";
 import {Button} from "~/components/ui/button";
 import {Text} from "~/components/ui/text";
@@ -20,6 +20,12 @@ export function AddItemDialog({open, list, onCompleteAdd}: AddItemDialogProps) {
     const [inputText, setInputText] = useState('');
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [working, setWorking] = useState(false);
+
+    useEffect(() => {
+        setInputText('');
+        setErrorMessage(null);
+        setWorking(false);
+    }, [open]);
 
     const ErrorText = () => {
         if (errorMessage) return (

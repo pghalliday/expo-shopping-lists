@@ -1,5 +1,5 @@
 import * as React from "react";
-import {useRef, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {Dialog, DialogContent, DialogTitle} from "~/components/ui/dialog";
 import {Button} from "~/components/ui/button";
 import {Text} from "~/components/ui/text";
@@ -16,9 +16,15 @@ type EditListDialogProps = {
 
 export function EditListDialog({open, list, onCompleteEdit}: EditListDialogProps) {
     const input = useRef<TextInput>(null);
-    const [inputText, setInputText] = useState('');
+    const [inputText, setInputText] = useState(list.name);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [working, setWorking] = useState(false);
+
+    useEffect(() => {
+        setInputText(list.name);
+        setErrorMessage(null);
+        setWorking(false);
+    }, [open]);
 
     const ErrorText = () => {
         if (errorMessage) return (
