@@ -8,7 +8,7 @@ export class LocalStorageService<T> {
 
     async set(value: T) {
         await database.localStorage.set<T>(this.key, value);
-        if (this.onValueCallback) this.onValueCallback((value));
+        this.onValueCallback?.(value);
     }
 
     onValue(callback: (value: T) => void) {
