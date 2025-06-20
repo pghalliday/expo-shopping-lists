@@ -13,6 +13,7 @@ import {Text} from "~/components/ui/text";
 import {Input} from "~/components/ui/input";
 import {ActivityIndicator, ScrollView, TextInput} from "react-native";
 import {supabase} from "~/lib/supabase";
+import {useFirstRun} from "~/lib/Root/FirstRunProvider";
 
 type EmailDialogProps = {
     open: boolean,
@@ -21,6 +22,7 @@ type EmailDialogProps = {
 };
 
 export function EmailDialog({open, onComplete, onCancel}: EmailDialogProps) {
+    const {firstRun} = useFirstRun();
     const input = useRef<TextInput>(null);
     const [inputText, setInputText] = useState('');
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -48,6 +50,11 @@ export function EmailDialog({open, onComplete, onCancel}: EmailDialogProps) {
             setWorking(true);
             const {error} = await supabase.auth.signInWithOtp({
                 email: inputText,
+                options: {
+                    data: {
+                        firstRun,
+                    },
+                },
             });
             setWorking(false);
             if (error) {

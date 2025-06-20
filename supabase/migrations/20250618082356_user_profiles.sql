@@ -1,7 +1,8 @@
 -- Create a table for public profiles
 create table profiles
 (
-    id uuid references auth.users not null primary key
+    id   uuid references auth.users on delete cascade not null primary key,
+    name text                                         not null
 );
 
 -- Set up Row Level Security (RLS)
@@ -9,8 +10,8 @@ create table profiles
 alter table profiles
     enable row level security;
 
-create policy "Users can insert their own profile." on profiles
-    for insert with check ((select auth.uid()) = id);
+create policy "Users can select their own profile." on profiles
+    for select using ((select auth.uid()) = id);
 
 create policy "Users can update own profile." on profiles
     for update using ((select auth.uid()) = id);
@@ -23,13 +24,12 @@ create function public.handle_new_user()
 as
 $$
 begin
-    insert into public.profiles (id)
-    values (new.id);
---     values (new.id, new.raw_user_meta_data ->> 'full_name', new.raw_user_meta_data ->> 'avatar_url');
+    insert into public.profiles (id, name)
+        values (new.id, new.email);
     return new;
 end;
 $$ language plpgsql security definer;
-create trigger on_auth_user_created
+create trigger handle_new_user
     after insert
     on auth.users
     for each row
