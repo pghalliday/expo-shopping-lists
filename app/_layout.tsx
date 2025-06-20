@@ -6,6 +6,7 @@ import {Drawer} from "expo-router/drawer";
 import {DrawerButton} from "~/components/DrawerButton";
 import {useFirstRun} from "~/lib/Root/FirstRunProvider";
 import {Stack} from "expo-router";
+import {useSupabaseSession} from "~/lib/Root/SupabaseSessionProvider";
 
 export {
     // Catch any errors thrown by the Layout component.
@@ -15,6 +16,7 @@ export {
 export default function RootLayout() {
     const InnerLayout = () => {
         const {firstRun} = useFirstRun();
+        const session = useSupabaseSession();
 
         const DefaultLayout = () => {
             return <Drawer
@@ -32,6 +34,14 @@ export default function RootLayout() {
                     name='settings'
                     options={{
                         drawerLabel: 'Settings',
+                    }}
+                />
+                <Drawer.Screen
+                    name='profile'
+                    options={session ? {
+                        drawerLabel: 'Profile',
+                    } : {
+                        drawerItemStyle: {display: 'none'}
                     }}
                 />
                 <Drawer.Screen
