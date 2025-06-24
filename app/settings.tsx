@@ -8,16 +8,18 @@ import {Text} from "~/components/ui/text";
 import {useFirstRun} from "~/lib/Root/FirstRunProvider";
 import {Redirect} from "expo-router";
 import {signOutSupabase} from "~/lib/supabase";
-import {resetDatabase} from "~/model/database";
 import {Drawer} from "expo-router/drawer";
+import {useApi} from "~/lib/Root/ApiProvider";
 
 export default function Screen() {
     const {firstRun, setFirstRun} = useFirstRun();
     if (firstRun) return <Redirect href='/firstRun'/>
 
+    const api = useApi();
+
     const reset = async () => {
         await signOutSupabase();
-        await resetDatabase();
+        await api!.resetDatabase();
         await setFirstRun(true);
     }
 

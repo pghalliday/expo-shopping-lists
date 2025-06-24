@@ -1,4 +1,4 @@
-import {database} from "~/model/database";
+import {Database} from "@nozbe/watermelondb";
 
 export class LocalStorageService<T> {
     private onValueCallback?: ((value: T) => void);
@@ -6,12 +6,12 @@ export class LocalStorageService<T> {
     constructor(private readonly key: string, private readonly defaultValue: T) {
     }
 
-    async set(value: T) {
+    async set(database: Database, value: T) {
         await database.localStorage.set<T>(this.key, value);
         this.onValueCallback?.(value);
     }
 
-    onValue(callback: (value: T) => void) {
+    onValue(database: Database, callback: (value: T) => void) {
         database.localStorage.get<T>(this.key).then((value) => {
             callback(value ?? this.defaultValue);
         });

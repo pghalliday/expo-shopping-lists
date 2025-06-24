@@ -2,8 +2,17 @@
 import { appSchema, tableSchema } from '@nozbe/watermelondb'
 
 export default appSchema({
-    version: 5,
+    version: 6,
     tables: [
+        tableSchema({
+            name: 'profiles',
+            columns: [
+                { name: 'user_id', type: 'string' },
+                { name: 'display_name', type: 'string' },
+                { name: 'created_at', type: 'number' },
+                { name: 'updated_at', type: 'number' },
+            ]
+        }),
         tableSchema({
             name: 'lists',
             columns: [

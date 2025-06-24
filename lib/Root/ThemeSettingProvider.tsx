@@ -1,5 +1,6 @@
 import {createContext, PropsWithChildren, useContext, useEffect, useState} from "react";
 import {LocalStorageService} from "~/lib/Root/LocalStorageService";
+import {useDatabase} from "@nozbe/watermelondb/react";
 
 export type ThemeSetting = 'light' | 'dark' | 'system';
 export const DEFAULT_THEME_SETTING: ThemeSetting = 'system';
@@ -8,11 +9,12 @@ const themeSettingContext = createContext<ThemeSetting>(DEFAULT_THEME_SETTING);
 const themeSettingStorage = new LocalStorageService<ThemeSetting>('theme', DEFAULT_THEME_SETTING);
 
 export function ThemeSettingProvider({children}: PropsWithChildren<{}>) {
+    const database = useDatabase();
     const [themeSetting, setThemeSetting] = useState<ThemeSetting>(DEFAULT_THEME_SETTING);
 
     useEffect(() => {
-        themeSettingStorage.onValue(value => setThemeSetting(value));
-    }, []);
+        themeSettingStorage.onValue(database, value => setThemeSetting(value));
+    }, [database]);
 
     return (
         <themeSettingContext.Provider value={themeSetting}>
@@ -22,8 +24,9 @@ export function ThemeSettingProvider({children}: PropsWithChildren<{}>) {
 }
 
 export function useThemeSetting() {
+    const database = useDatabase();
     return {
         themeSetting: useContext(themeSettingContext),
-        setThemeSetting: (value: ThemeSetting) => themeSettingStorage.set(value),
+        setThemeSetting: (value: ThemeSetting) => themeSettingStorage.set(database, value),
     };
 }

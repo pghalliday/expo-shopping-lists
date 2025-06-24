@@ -2,7 +2,6 @@ import * as React from "react";
 import {useEffect, useState} from "react";
 import {ActivityIndicator, View} from "react-native";
 import List from "~/model/List";
-import {database} from "~/model/database";
 import CurrentItem from "~/model/CurrentItem";
 import {EditButton} from "~/components/EditButton";
 import {Drawer} from "expo-router/drawer";
@@ -11,36 +10,19 @@ import Item from "~/model/Item";
 import {createModelList} from "~/components/ModelList";
 import {AddItemDialog} from "~/components/CurrentList/WithCurrentList/AddItemDialog";
 import {EditListDialog} from "~/components/CurrentList/WithCurrentList/EditListDialog";
+import {useDatabase} from "@nozbe/watermelondb/react";
 
 type CurrentItemListItemProps = {
     currentItem: CurrentItem,
     item: Item,
 };
 
-const CurrentItemList = createModelList({
-    async delete(props: CurrentItemListItemProps): Promise<void> {
-        await database.write(async () => {
-            await props.currentItem.markAsDeleted();
-        });
-    },
-    getListText(props: CurrentItemListItemProps): string {
-        return props.item.name;
-    },
-    onPress(_props: CurrentItemListItemProps): void {
-    },
-    getObservables({model}: { model: CurrentItem }): any {
-        return {
-            currentItem: model,
-            item: model.item,
-        }
-    }
-})
-
 type WithCurrentListProps = {
     currentList: string,
 };
 
 export function WithCurrentList({currentList}: WithCurrentListProps) {
+    const database = useDatabase();
     const [list, setList] = useState<List>();
     const [addingItem, setAddingItem] = useState(false);
     const [editingList, setEditingList] = useState(false);
@@ -73,6 +55,25 @@ export function WithCurrentList({currentList}: WithCurrentListProps) {
         }
         setAddingItem(false);
     }
+
+    const CurrentItemList = createModelList({
+        async delete(props: CurrentItemListItemProps): Promise<void> {
+            await database.write(async () => {
+                await props.currentItem.markAsDeleted();
+            });
+        },
+        getListText(props: CurrentItemListItemProps): string {
+            return props.item.name;
+        },
+        onPress(_props: CurrentItemListItemProps): void {
+        },
+        getObservables({model}: { model: CurrentItem }): any {
+            return {
+                currentItem: model,
+                item: model.item,
+            }
+        }
+    })
 
     if (list !== undefined) {
         return <>
