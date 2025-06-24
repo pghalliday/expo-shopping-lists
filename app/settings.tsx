@@ -5,21 +5,27 @@ import {Separator} from "~/components/ui/separator";
 import {LinkedAccount} from "~/components/LinkedAccount";
 import {Button} from "~/components/ui/button";
 import {Text} from "~/components/ui/text";
-import {useFirstRun} from "~/lib/Root/FirstRunProvider";
+import {useIsInitialized} from "~/lib/providers/IsInitialisedProvider";
 import {Redirect} from "expo-router";
-import {signOutSupabase} from "~/lib/supabase";
-import {resetDatabase} from "~/model/database";
 import {Drawer} from "expo-router/drawer";
+import {useApi} from "~/lib/providers/ApiProvider";
+import {useSupabase} from "~/lib/providers/SupabaseProvider";
+import {useCallback} from "react";
 
 export default function Screen() {
-    const {firstRun, setFirstRun} = useFirstRun();
-    if (firstRun) return <Redirect href='/firstRun'/>
+    const {isInitialized, setIsInitialized} = useIsInitialized();
+    const supabase = useSupabase();
+    if (!isInitialized) return <Redirect href='/firstRun'/>
 
-    const reset = async () => {
-        await signOutSupabase();
-        await resetDatabase();
-        await setFirstRun(true);
-    }
+    const api = useApi();
+
+    const reset = useCallback(async () => {
+        if (supabase && api) {
+            await supabase.auth.signOut();
+            await api.resetDatabase();
+            await setIsInitialized(false);
+        }
+    }, [supabase, api])
 
     return <>
         <Drawer.Screen

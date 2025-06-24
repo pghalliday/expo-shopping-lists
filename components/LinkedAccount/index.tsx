@@ -1,5 +1,5 @@
 import * as React from "react";
-import {useSupabaseSession} from "~/lib/Root/SupabaseSessionProvider";
+import {useSupabaseSession} from "~/lib/providers/SessionProvider";
 import {WhileNotLinked} from "~/components/LinkedAccount/WhileNotLinked";
 import {WhileLinked} from "~/components/LinkedAccount/WhileLinked";
 

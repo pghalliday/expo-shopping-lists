@@ -5,9 +5,9 @@ import {Button} from "~/components/ui/button";
 import {Text} from "~/components/ui/text";
 import {Input} from "~/components/ui/input";
 import {ActivityIndicator, ScrollView, TextInput} from "react-native";
-import {addCurrentItem} from "~/model/database";
 import List from "~/model/List";
 import CurrentItem from "~/model/CurrentItem";
+import {useApi} from "~/lib/providers/ApiProvider";
 
 type AddItemDialogProps = {
     open: boolean,
@@ -16,6 +16,7 @@ type AddItemDialogProps = {
 };
 
 export function AddItemDialog({open, list, onCompleteAdd}: AddItemDialogProps) {
+    const api = useApi();
     const input = useRef<TextInput>(null);
     const [inputText, setInputText] = useState('');
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -42,7 +43,7 @@ export function AddItemDialog({open, list, onCompleteAdd}: AddItemDialogProps) {
         if (inputText !== '') {
             setWorking(true);
             try {
-                const currentItem = await addCurrentItem(list.id, inputText);
+                const currentItem = await api!.addCurrentItem(list.id, inputText);
                 onCompleteAdd(currentItem);
             } catch (error: any) {
                 setErrorMessage(error);

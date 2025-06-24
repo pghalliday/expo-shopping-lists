@@ -3,7 +3,7 @@ import {PropsWithChildren, useEffect, useLayoutEffect, useRef, useState} from "r
 import {DarkTheme, DefaultTheme, Theme, ThemeProvider} from "@react-navigation/native";
 import {useColorScheme} from "~/lib/useColorScheme";
 import {NAV_THEME} from "~/lib/constants";
-import {useThemeSetting} from "~/lib/Root/ThemeSettingProvider";
+import {useThemeSetting} from "~/lib/providers/ThemeSettingProvider";
 import {setAndroidNavigationBar} from "~/lib/android-navigation-bar";
 import {Platform} from "react-native";
 

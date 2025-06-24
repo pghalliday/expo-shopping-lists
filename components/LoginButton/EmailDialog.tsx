@@ -1,5 +1,5 @@
 import * as React from "react";
-import {useEffect, useRef, useState} from "react";
+import {useCallback, useEffect, useRef, useState} from "react";
 import {
     Dialog,
     DialogContent,
@@ -12,8 +12,8 @@ import {Button} from "~/components/ui/button";
 import {Text} from "~/components/ui/text";
 import {Input} from "~/components/ui/input";
 import {ActivityIndicator, ScrollView, TextInput} from "react-native";
-import {supabase} from "~/lib/supabase";
-import {useFirstRun} from "~/lib/Root/FirstRunProvider";
+import {useIsInitialized} from "~/lib/providers/IsInitialisedProvider";
+import {useSupabase} from "~/lib/providers/SupabaseProvider";
 
 type EmailDialogProps = {
     open: boolean,
@@ -22,7 +22,8 @@ type EmailDialogProps = {
 };
 
 export function EmailDialog({open, onComplete, onCancel}: EmailDialogProps) {
-    const {firstRun} = useFirstRun();
+    const {isInitialized} = useIsInitialized();
+    const supabase = useSupabase();
     const input = useRef<TextInput>(null);
     const [inputText, setInputText] = useState('');
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -41,32 +42,34 @@ export function EmailDialog({open, onComplete, onCancel}: EmailDialogProps) {
         return null;
     };
 
-    const onChangeText = (inputText: string) => {
+    const onChangeText = useCallback((inputText: string) => {
         setInputText(inputText);
-    };
+    }, []);
 
-    async function submit() {
-        if (inputText !== '') {
-            setWorking(true);
-            const {error} = await supabase.auth.signInWithOtp({
-                email: inputText,
-                options: {
-                    data: {
-                        firstRun,
+    const submit = useCallback(async () => {
+        if (supabase) {
+            if (inputText !== '') {
+                setWorking(true);
+                const {error} = await supabase.auth.signInWithOtp({
+                    email: inputText,
+                    options: {
+                        data: {
+                            firstRun: isInitialized,
+                        },
                     },
-                },
-            });
-            setWorking(false);
-            if (error) {
-                setErrorMessage(error.message);
-                setTimeout(() => {
-                    input.current?.focus();
-                }, 0);
-            } else {
-                onComplete(inputText);
+                });
+                setWorking(false);
+                if (error) {
+                    setErrorMessage(error.message);
+                    setTimeout(() => {
+                        input.current?.focus();
+                    }, 0);
+                } else {
+                    onComplete(inputText);
+                }
             }
         }
-    }
+    }, [supabase, inputText])
 
     return <Dialog open={open} onOpenChange={() => onCancel()}>
         <DialogContent className='min-w-full mt-10'>

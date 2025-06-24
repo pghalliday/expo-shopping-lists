@@ -5,24 +5,24 @@ import {Button} from "~/components/ui/button";
 import {Text} from "~/components/ui/text";
 import {Input} from "~/components/ui/input";
 import {ActivityIndicator, ScrollView, TextInput} from "react-native";
-import List from "~/model/List";
+import Profile from "~/model/Profile";
 import {useApi} from "~/lib/providers/ApiProvider";
 
-type EditListDialogProps = {
+type EditDisplayNameDialogProps = {
     open: boolean,
-    list: List,
+    profile: Profile,
     onCompleteEdit: () => void,
 };
 
-export function EditListDialog({open, list, onCompleteEdit}: EditListDialogProps) {
+export function EditDisplayNameDialog({open, profile, onCompleteEdit}: EditDisplayNameDialogProps) {
     const api = useApi();
     const input = useRef<TextInput>(null);
-    const [inputText, setInputText] = useState(list.name);
+    const [inputText, setInputText] = useState(profile.displayName);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [working, setWorking] = useState(false);
 
     useEffect(() => {
-        setInputText(list.name);
+        setInputText(profile.displayName);
         setErrorMessage(null);
         setWorking(false);
     }, [open]);
@@ -38,11 +38,11 @@ export function EditListDialog({open, list, onCompleteEdit}: EditListDialogProps
         setInputText(inputText);
     };
 
-    async function editList() {
+    async function setDisplayName() {
         if (inputText !== '') {
             setWorking(true);
             try {
-                await api!.updateList(list, inputText);
+                await api!.updateProfileDisplayName(profile, inputText);
                 onCompleteEdit();
             } catch (error: any) {
                 setErrorMessage(error);
@@ -56,23 +56,27 @@ export function EditListDialog({open, list, onCompleteEdit}: EditListDialogProps
     return <Dialog open={open} onOpenChange={() => onCompleteEdit()}>
         <DialogContent className='min-w-full mt-10'>
             <DialogHeader>
-                <DialogTitle>Edit List</DialogTitle>
+                <DialogTitle>Change Display Name</DialogTitle>
             </DialogHeader>
             <ScrollView>
                 <ErrorText/>
                 <Input
                     ref={input}
                     autoFocus
-                    placeholder='List name'
+                    placeholder='Your Name'
+                    autoComplete='off'
+                    autoCapitalize='words'
+                    autoCorrect={false}
+                    keyboardType='default'
                     onChangeText={onChangeText}
                     submitBehavior='submit'
-                    onSubmitEditing={editList}
+                    onSubmitEditing={setDisplayName}
                     editable={!working}
                     value={inputText}
                 />
             </ScrollView>
             <DialogFooter>
-                <Button onPress={editList} disabled={working || inputText === ''}>
+                <Button onPress={setDisplayName} disabled={working || inputText === ''}>
                     <Text>Save</Text>
                 </Button>
                 <ActivityIndicator animating={working}/>

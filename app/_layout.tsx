@@ -1,12 +1,22 @@
+import "reflect-metadata";
 import '~/global.css';
 
 import * as React from 'react';
-import {Root} from "~/lib/Root";
+import {Providers} from "~/lib/providers";
 import {Drawer} from "expo-router/drawer";
 import {DrawerButton} from "~/components/DrawerButton";
-import {useFirstRun} from "~/lib/Root/FirstRunProvider";
+import {useIsInitialized} from "~/lib/providers/IsInitialisedProvider";
 import {Stack} from "expo-router";
-import {useSupabaseSession} from "~/lib/Root/SupabaseSessionProvider";
+import {useCurrentProfile} from "~/lib/providers/CurrentProfileProvider";
+import {configure} from "~/tsyringe/configure";
+import {RealtimeService} from "~/lib/services/RealtimeService";
+import {container} from "tsyringe";
+
+// Configure the tsyringe container
+configure();
+
+// Start the realtime service to sync on remote events
+container.resolve(RealtimeService);
 
 export {
     // Catch any errors thrown by the Layout component.
@@ -15,8 +25,8 @@ export {
 
 export default function RootLayout() {
     const InnerLayout = () => {
-        const {firstRun} = useFirstRun();
-        const session = useSupabaseSession();
+        const {isInitialized} = useIsInitialized();
+        const currentProfile = useCurrentProfile();
 
         const DefaultLayout = () => {
             return <Drawer
@@ -38,7 +48,7 @@ export default function RootLayout() {
                 />
                 <Drawer.Screen
                     name='profile'
-                    options={session ? {
+                    options={currentProfile ? {
                         drawerLabel: 'Profile',
                     } : {
                         drawerItemStyle: {display: 'none'}
@@ -57,13 +67,13 @@ export default function RootLayout() {
             return <Stack/>
         }
 
-        if (firstRun) return <FirstRunLayout/>
-        return <DefaultLayout/>
+        if (isInitialized) return <DefaultLayout/>
+        return <FirstRunLayout/>
     }
 
     return (
-        <Root>
+        <Providers>
             <InnerLayout/>
-        </Root>
+        </Providers>
     );
 }

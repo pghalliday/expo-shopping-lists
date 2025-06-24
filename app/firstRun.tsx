@@ -1,29 +1,30 @@
 import * as React from 'react';
-import {useFirstRun} from "~/lib/Root/FirstRunProvider";
+import {useIsInitialized} from "~/lib/providers/IsInitialisedProvider";
 import {Redirect, Stack} from "expo-router";
-import {useCurrentList} from "~/lib/Root/CurrentListProvider";
-import {addList} from "~/model/database";
+import {useCurrentList} from "~/lib/providers/CurrentListProvider";
 import {View} from "react-native";
 import {Text} from "~/components/ui/text";
 import {Button} from "~/components/ui/button";
 import {LoginButton} from "~/components/LoginButton";
+import {useApi} from "~/lib/providers/ApiProvider";
 
 export default function Screen() {
-    const {firstRun, setFirstRun} = useFirstRun();
-    if (!firstRun) return <Redirect href='/'/>
+    const {isInitialized, setIsInitialized} = useIsInitialized();
+    if (isInitialized) return <Redirect href='/'/>
 
+    const api = useApi();
     const {setCurrentList} = useCurrentList();
 
     const createLocal = async () => {
         // TODO: error handling
-        const list = await addList('My first list');
+        const list = await api.addList('My first list');
         await setCurrentList(list.id);
-        await setFirstRun(false);
+        await setIsInitialized(true);
     }
 
     const onLinkComplete = async () => {
-        await setCurrentList(null);
-        await setFirstRun(false);
+        await setCurrentList(undefined);
+        await setIsInitialized(true);
     }
 
     return <>

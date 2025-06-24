@@ -1,5 +1,5 @@
 import * as React from "react";
-import {useEffect, useRef, useState} from "react";
+import {useCallback, useEffect, useRef, useState} from "react";
 import {
     Dialog,
     DialogContent,
@@ -12,7 +12,7 @@ import {Button} from "~/components/ui/button";
 import {Text} from "~/components/ui/text";
 import {Input} from "~/components/ui/input";
 import {ActivityIndicator, ScrollView, TextInput} from "react-native";
-import {supabase} from "~/lib/supabase";
+import {useSupabase} from "~/lib/providers/SupabaseProvider";
 
 type CodeDialogProps = {
     open: boolean,
@@ -22,6 +22,7 @@ type CodeDialogProps = {
 };
 
 export function CodeDialog({open, email, onComplete, onCancel}: CodeDialogProps) {
+    const supabase = useSupabase();
     const input = useRef<TextInput>(null);
     const [inputText, setInputText] = useState('');
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -40,29 +41,31 @@ export function CodeDialog({open, email, onComplete, onCancel}: CodeDialogProps)
         return null;
     };
 
-    const onChangeText = (inputText: string) => {
+    const onChangeText = useCallback((inputText: string) => {
         setInputText(inputText);
-    };
+    }, []);
 
-    async function submit() {
-        if (inputText !== '') {
-            setWorking(true);
-            const {error} = await supabase.auth.verifyOtp({
-                email,
-                token: inputText,
-                type: 'email',
-            })
-            setWorking(false);
-            if (error) {
-                setErrorMessage(error.message);
-                setTimeout(() => {
-                    input.current?.focus();
-                }, 0)
-            } else {
-                onComplete();
+    const submit = useCallback(async () => {
+        if (supabase) {
+            if (inputText !== '') {
+                setWorking(true);
+                const {error} = await supabase.auth.verifyOtp({
+                    email,
+                    token: inputText,
+                    type: 'email',
+                })
+                setWorking(false);
+                if (error) {
+                    setErrorMessage(error.message);
+                    setTimeout(() => {
+                        input.current?.focus();
+                    }, 0)
+                } else {
+                    onComplete();
+                }
             }
         }
-    }
+    }, [supabase, inputText])
 
     return <Dialog open={open} onOpenChange={() => onCancel()}>
         <DialogContent className='min-w-full mt-10'>
