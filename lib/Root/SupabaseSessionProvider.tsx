@@ -11,7 +11,8 @@ export function SupabaseSessionProvider({children}: PropsWithChildren<{}>) {
         supabase.auth.getSession().then(({data: {session}}) => {
             setSession(session);
         });
-        supabase.auth.onAuthStateChange((_event, session) => {
+        supabase.auth.onAuthStateChange(async (event, session) => {
+            console.log('supabase: onAuthStateChange: ', event);
             setSession(session);
         });
     }, []);

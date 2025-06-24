@@ -6,10 +6,12 @@ import CurrentItem from "~/model/CurrentItem";
 import PreviousItem from "~/model/PreviousItem";
 import ItemSource from "~/model/ItemSource";
 import {adapter} from "~/model/adapter";
+import Profile from "~/model/Profile";
 
 export const database = new Database({
     adapter,
     modelClasses: [
+        Profile,
         List,
         Source,
         Item,
@@ -50,6 +52,14 @@ export async function updateList(list: List, name: string) {
     return database.write(async () => {
         return list.update(list => {
             list.name = name;
+        });
+    });
+}
+
+export async function updateProfileDisplayName(profile: Profile, displayName: string) {
+    return database.write(async () => {
+        return profile.update(profile => {
+            profile.displayName = displayName;
         });
     });
 }
