@@ -1,11 +1,13 @@
 create table changesets
 (
-    timestamp      timestamp_ms primary key,
+    id             uuid primary key,
+    timestamp      timestamp_ms not null unique,
     user_id        uuid         references auth.users on delete set null,
     changes        jsonb        not null,
     last_pulled_at timestamp_ms not null
 );
 
+create index idx_changeset_timestamp on changesets (timestamp);
 create index idx_changeset_user_id on changesets (user_id);
 
 alter table changesets

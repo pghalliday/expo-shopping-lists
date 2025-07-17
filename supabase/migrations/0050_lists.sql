@@ -1,9 +1,9 @@
 create table lists
 (
     id         uuid primary key,
-    name       text                               not null,
-    updated_at timestamp_ms references changesets not null,
-    deleted_at timestamp_ms references changesets
+    name       text                                           not null,
+    updated_at timestamp_ms references changesets (timestamp) not null,
+    deleted_at timestamp_ms references changesets (timestamp)
 );
 
 create index idx_lists_updated_at on lists (updated_at);
@@ -15,10 +15,10 @@ alter table lists
 create table list_users
 (
     id         uuid primary key,
-    user_id    uuid references auth.users on delete cascade not null,
-    list_id    uuid references lists on delete cascade      not null,
-    created_at timestamp_ms references changesets           not null,
-    deleted_at timestamp_ms references changesets,
+    user_id    uuid references auth.users on delete cascade   not null,
+    list_id    uuid references lists on delete cascade        not null,
+    created_at timestamp_ms references changesets (timestamp) not null,
+    deleted_at timestamp_ms references changesets (timestamp),
     -- The following unique constraint should ensure that users can only
     -- have 1 undeleted list membership per list
     unique nulls not distinct (user_id, list_id, deleted_at)

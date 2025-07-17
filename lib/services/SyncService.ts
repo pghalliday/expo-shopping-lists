@@ -5,6 +5,7 @@ import {Database as SupabaseDatabase} from "~/supabase/ts/supabase.types";
 import {Database as WatermelonDatabase} from "@nozbe/watermelondb";
 import {SyncDatabaseChangeSet, synchronize} from "@nozbe/watermelondb/sync";
 import {inject, singleton} from "tsyringe";
+import {v4 as uuidv4} from 'uuid';
 
 import {DATABASE, SUPABASE, SYNC_RETRY_DELAY, SYNC_THROTTLE_DURATION} from "~/tsyringe/symbols";
 import {SessionService} from "~/lib/services/SessionService";
@@ -13,6 +14,8 @@ import {SessionService} from "~/lib/services/SessionService";
 export class SyncService {
     private readonly logger = new SyncLogger(1);
     private readonly syncNotifier = new Subject<void>();
+    public lastId?: string;
+    public lastTimestamp?: number;
     private running = false;
 
     constructor(
@@ -51,13 +54,20 @@ export class SyncService {
                                 changes: SyncDatabaseChangeSet
                                 timestamp: number
                             }
+                            this.lastTimestamp = timestamp;
                             return {changes, timestamp}
                         },
                         pushChanges: async ({changes, lastPulledAt}) => {
-                            const {error} = await supabase.rpc('push', {
+                            this.lastId = uuidv4();
+                            const {data, error} = await supabase.rpc('push', {
+                                p_id: this.lastId,
                                 p_last_pulled_at: lastPulledAt,
                                 p_changes: changes,
                             })
+                            const {timestamp} = data as {
+                                timestamp: number
+                            }
+                            this.lastTimestamp = timestamp;
                             if (error) throw error
                         },
                         sendCreatedAsUpdated: true,

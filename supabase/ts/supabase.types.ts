@@ -37,18 +37,21 @@ export type Database = {
       changesets: {
         Row: {
           changes: Json
+          id: string
           last_pulled_at: string
           timestamp: string
           user_id: string | null
         }
         Insert: {
           changes: Json
+          id: string
           last_pulled_at: string
           timestamp: string
           user_id?: string | null
         }
         Update: {
           changes?: Json
+          id?: string
           last_pulled_at?: string
           timestamp?: string
           user_id?: string | null
@@ -251,12 +254,17 @@ export type Database = {
         Returns: Json
       }
       push: {
-        Args: { p_last_pulled_at: number; p_changes: Json }
-        Returns: undefined
+        Args: { p_id: string; p_last_pulled_at: number; p_changes: Json }
+        Returns: Json
       }
       push_internal: {
-        Args: { p_user_id: string; p_last_pulled_at: number; p_changes: Json }
-        Returns: undefined
+        Args: {
+          p_id: string
+          p_user_id: string
+          p_last_pulled_at: number
+          p_changes: Json
+        }
+        Returns: Json
       }
       push_profiles: {
         Args: {

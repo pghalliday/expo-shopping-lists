@@ -1,17 +1,23 @@
-create function push_internal(p_user_id uuid, p_last_pulled_at bigint, p_changes jsonb) returns void as
+create function push_internal(p_id uuid, p_user_id uuid, p_last_pulled_at bigint, p_changes jsonb) returns jsonb as
 $$
 declare
     v_last_pulled_at public.timestamp_ms;
+    v_timestamp public.timestamp_ms;
 begin
     v_last_pulled_at := public.epoch_to_timestamp(coalesce(p_last_pulled_at, 0));
-    insert into public.changesets (timestamp, user_id, changes, last_pulled_at)
-    values (public.timestamp_ms 'epoch', p_user_id, p_changes, v_last_pulled_at);
+    insert into public.changesets (id, timestamp, user_id, changes, last_pulled_at)
+    values (p_id, public.timestamp_ms 'epoch', p_user_id, p_changes, v_last_pulled_at)
+    returning timestamp into v_timestamp;
+    return jsonb_build_object(
+           'timestamp',
+           public.timestamp_to_epoch(v_timestamp)
+           );
 end;
 $$ language plpgsql;
 
-create function push(p_last_pulled_at bigint, p_changes jsonb) returns void as
+create function push(p_id uuid, p_last_pulled_at bigint, p_changes jsonb) returns jsonb as
 $$
-    select public.push_internal((select auth.uid()), p_last_pulled_at, p_changes);
+select public.push_internal(p_id, (select auth.uid()), p_last_pulled_at, p_changes);
 $$ language sql;
 
 create function pull(p_last_pulled_at bigint default 0) returns jsonb as

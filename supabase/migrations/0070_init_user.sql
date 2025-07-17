@@ -2,6 +2,7 @@ create function init_user() returns trigger as
 $$
 begin
     perform public.push_internal(
+            gen_random_uuid(),
             new.id,
             0,
             jsonb_build_object(

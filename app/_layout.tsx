@@ -1,4 +1,5 @@
 import "reflect-metadata";
+import 'react-native-get-random-values'
 import '~/global.css';
 
 import * as React from 'react';
@@ -11,12 +12,17 @@ import {useCurrentProfile} from "~/lib/providers/CurrentProfileProvider";
 import {configure} from "~/tsyringe/configure";
 import {RealtimeService} from "~/lib/services/RealtimeService";
 import {container} from "tsyringe";
+import {setGenerator} from "@nozbe/watermelondb/utils/common/randomId";
+import {v4 as uuidv4} from 'uuid';
 
 // Configure the tsyringe container
 configure();
 
 // Start the realtime service to sync on remote events
 container.resolve(RealtimeService);
+
+// Set the watermelon ID generator
+setGenerator(uuidv4);
 
 export {
     // Catch any errors thrown by the Layout component.

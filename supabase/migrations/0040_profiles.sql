@@ -1,11 +1,11 @@
 create table profiles
 (
     id           uuid primary key,
-    user_id      uuid references auth.users on delete cascade not null,
-    display_name text                                         not null,
-    created_at   timestamp_ms references changesets           not null,
-    updated_at   timestamp_ms references changesets           not null,
-    deleted_at   timestamp_ms references changesets,
+    user_id      uuid references auth.users on delete cascade   not null,
+    display_name text                                           not null,
+    created_at   timestamp_ms references changesets (timestamp) not null,
+    updated_at   timestamp_ms references changesets (timestamp) not null,
+    deleted_at   timestamp_ms references changesets (timestamp),
     -- The following unique constraint should ensure that only 1
     -- undeleted profile exists for each user
     unique nulls not distinct (user_id, deleted_at)
