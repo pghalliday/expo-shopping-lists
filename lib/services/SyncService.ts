@@ -55,6 +55,7 @@ export class SyncService {
                                 timestamp: number
                             }
                             this.lastTimestamp = timestamp;
+                            console.log(`SyncService: pull: lastTimestamp:`, this.lastTimestamp);
                             return {changes, timestamp}
                         },
                         pushChanges: async ({changes, lastPulledAt}) => {
@@ -68,6 +69,7 @@ export class SyncService {
                                 timestamp: number
                             }
                             this.lastTimestamp = timestamp;
+                            console.log(`SyncService: push: lastTimestamp:`, this.lastTimestamp);
                             if (error) throw error
                         },
                         sendCreatedAsUpdated: true,
